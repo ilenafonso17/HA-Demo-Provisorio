@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#006b3a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Smart Pro Agente</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <h1>🌿 Smart Pro Agente</h1>
+    <p>Gestão Inteligente de Clientes e Demonstrações</p>
+    <div class="nav" id="nav"></div>
+  </div>
+
+  <div id="dashboard" class="section active">
+    <h2>📊 Painel Inicial</h2>
+    <div class="card"><h3>Bem-vinda</h3><div id="daily" class="result">A carregar resumo do dia...</div></div>
+    <div class="grid">
+      <div class="card"><h3>📅 Agenda próxima</h3><div id="agendaNext"></div></div>
+      <div class="card"><h3>⭐ Clientes a acompanhar</h3><div id="followList"></div></div>
+    </div>
+  </div>
+
+  <div id="clients" class="section">
+    <h2>👥 Clientes</h2>
+    <div class="card">
+      <input type="hidden" id="c_edit_id">
+      <div class="grid3">
+        <div><label>Nome</label><input id="c_nome"></div>
+        <div><label>Telefone</label><input id="c_tel"></div>
+        <div><label>Email</label><input id="c_email"></div>
+        <div><label>Morada</label><input id="c_morada"></div>
+        <div><label>NIF</label><input id="c_nif"></div>
+        <div><label>Data nascimento</label><input id="c_nasc" type="date"></div>
+        <div><label>Zona</label><select id="c_zona"><option></option><option>Lisboa</option><option>Almada</option><option>Oeste</option><option>Leiria</option><option>Terra</option></select></div>
+        <div><label>Terra/localidade</label><input id="c_terra"></div>
+        <div><label>Bimby anterior</label><select id="c_modelo"><option>Nunca teve</option><option>TM21</option><option>TM31</option><option>TM5</option><option>TM6</option><option>TM7</option></select></div>
+        <div><label>Data demo</label><input id="c_demoData" type="date"></div>
+        <div><label>Tipo demo</label><select id="c_demoTipo"><option></option><option>7 Maravilhas</option><option>Evolução</option><option>Bebés</option><option>Loja</option><option>Casa</option><option>Outra</option></select></div>
+        <div><label>Demo de loja?</label><select id="c_loja"><option>Não</option><option>Sim</option></select></div>
+        <div><label>N.º VP</label><input id="c_vp"></div>
+        <div><label>O que adquiriu</label><input id="c_compra"></div>
+        <div><label>Valor venda (€)</label><input id="c_valorVenda" inputmode="decimal"></div>
+        <div><label>Campanha / Bundle</label><input id="c_campanha"></div>
+        <div><label>Data VPV</label><input id="c_vpv" type="date"></div>
+        <div><label>Aula cozinha</label><input id="c_aula" type="date"></div>
+        <div><label>Data VM</label><input id="c_vm" type="date"></div>
+        <div><label>Estado</label><select id="c_estado"><option>Pendente</option><option>Comprou</option><option>Sem interesse</option><option>Recontactar</option></select></div>
+      </div>
+      <label>Contactos que deu</label><textarea id="c_contactos"></textarea>
+      <label>Acordos / ofertas combinadas</label><textarea id="c_acordos"></textarea>
+      <label>Observações</label><textarea id="c_obs"></textarea>
+      <div class="row"><button onclick="saveClient()">Guardar cliente</button><button class="secondary" onclick="clearClient()">Limpar</button></div>
+    </div>
+    <div class="card">
+      <h3>Pesquisa</h3>
+      <div class="grid4">
+        <input id="q" placeholder="Nome, terra, observações..." oninput="this.dataset.quick='';renderClients()">
+        <select id="qsort" onchange="renderClients()"><option value="az">Nome A-Z</option><option value="za">Nome Z-A</option><option value="demo">Data demo</option><option value="nasc">Aniversário</option></select>
+        <select id="qmodelo" onchange="renderClients()"><option value="">Todas máquinas</option><option>TM31</option><option>TM5</option><option>TM6</option><option>TM7</option><option>Nunca teve</option></select>
+        <select id="qzona" onchange="renderClients()"><option value="">Todas zonas</option><option>Lisboa</option><option>Almada</option><option>Oeste</option><option>Leiria</option><option>Terra</option></select>
+      </div>
+      <div class="grid4" style="margin-top:10px">
+        <select id="qmes" onchange="renderClients()"><option value="">Mês aniversário</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="secondary" onclick="quick('pendentes')">Pendentes</button>
+        <button class="secondary" onclick="quick('acordos')">Acordos</button>
+        <button class="secondary" onclick="quick('loja')">Demo loja</button>
+        <button class="secondary" onclick="quick('aulas')">Aulas</button>
+        <button class="secondary" onclick="quick('vpv')">VPV</button>
+        <button class="secondary" onclick="quick('vm')">VM</button>
+      </div>
+      <div id="clientTable"></div>
+    </div>
+  </div>
+
+  <div id="finance" class="section">
+    <h2>💳 Financiamento</h2>
+    <div class="card">
+      <p class="pill">Compare as formas de aquisição: total financiado primeiro e valor a pronto no fim.</p>
+      <div class="grid4" id="finCards"></div>
+      <div class="row"><button onclick="calcFinance()">Atualizar financiamento</button><button class="secondary" onclick="copyFinance()">Copiar resumo</button></div>
+      <div id="finSummary" class="result" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="savings" class="section">
+    <h2>🛒 Poupança</h2>
+    <div class="card">
+      <div class="grid3">
+        <div><label>Produto</label><select id="p_prod" onchange="loadFormats()"></select></div>
+        <div><label>Formato supermercado</label><select id="p_format" onchange="estimatePrice()"></select></div>
+        <div><label>Supermercado</label><select id="p_store" onchange="estimatePrice()"><option>Continente</option><option>Pingo Doce</option><option>Lidl</option><option>Aldi</option><option>Auchan</option><option>Mercadona</option><option>Intermarché</option><option>Outro</option></select></div>
+        <div><label>Preço supermercado (€)</label><input id="p_price" inputmode="decimal"></div>
+        <div><label>Quantidade</label><input id="p_qty" type="number" value="1"></div>
+        <div><label>Periodicidade</label><select id="p_period"></select></div>
+      </div>
+      <p class="small">O preço do supermercado é estimado consoante produto, formato e supermercado. Pode alterar manualmente.</p>
+      <button onclick="addSaving()">Adicionar ao resumo</button>
+    </div>
+    <div class="card">
+      <h3>Resumo de poupança</h3>
+      <div id="savList"></div>
+      <div id="savTotal" class="result"></div>
+      <div class="row"><button onclick="copySavings()">Copiar resumo</button><button onclick="whatsappSavings()">Enviar WhatsApp</button></div>
+    </div>
+  </div>
+
+  <div id="agenda" class="section">
+    <h2>📅 Agenda</h2>
+    <div class="card">
+      <div class="row"><button onclick="agendaFilter('today')">Hoje</button><button onclick="agendaFilter('week')">Esta semana</button><button onclick="agendaFilter('month')">Este mês</button><button onclick="agendaFilter('all')">Tudo</button></div>
+      <div id="agendaTable"></div>
+    </div>
+  </div>
+
+  <div id="stats" class="section"><h2>📈 Estatísticas</h2><div class="card" id="statsBox"></div></div>
+
+  <div id="recruits" class="section">
+    <h2>🌱 Recrutas</h2>
+    <div class="card"><label>Nome da recruta</label><input id="r_nome"><label>Contactos/clientes da recruta</label><textarea id="r_contactos"></textarea><button onclick="saveRecruit()">Guardar recruta</button></div>
+    <div class="card" id="r_list"></div>
+  </div>
+
+  <div id="settings" class="section">
+    <h2>⚙️ Definições e Backup</h2>
+    <div class="card"><h3>Tabela de preços estimados</h3><p class="small">Edite em formato JSON se quiser ajustar preços. Os valores ficam guardados neste dispositivo.</p><textarea id="priceJson" style="min-height:220px"></textarea><button onclick="savePrices()">Guardar preços</button></div>
+    <div class="card"><h3>Backup</h3><div class="row"><button onclick="exportBackup()">Exportar backup</button><button onclick="document.getElementById('importFile').click()">Importar backup</button><button onclick="exportCSV()">Exportar CSV/Excel</button><input id="importFile" type="file" style="display:none" onchange="importBackup(this.files[0])"></div></div>
+  </div>
+  <div class="footer">Smart Pro Agente · Gestão Inteligente de Clientes e Demonstrações</div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
