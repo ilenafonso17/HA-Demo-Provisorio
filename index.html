@@ -95,33 +95,33 @@
     <div class="card">
       <h3>🛒 Produtos e hábitos</h3>
       <div class="grid3">
-        <div><label>Nome da pessoa (opcional)</label><input id="sim_name" placeholder="Ex.: Ana"></div>
+        <div><label>Nome (se quiser)</label><input id="sim_name" placeholder="Ex.: Ana"></div>
       </div>
-      <p class="pill">Supermercado × Feito em casa</p>
+      <p class="pill">Comprar ou fazer?</p>
       <div class="grid3">
         <div><label>Produto</label><select id="p_prod" onchange="loadFormats()"></select></div>
         <div><label>Onde compra?</label><select id="p_store" onchange="loadReferenceOptions()"><option value="">Escolha</option><option>Aldi</option><option>Auchan</option><option>Continente</option><option>Intermarché</option><option>Lidl</option><option>Mercadona</option><option>Outro</option><option>Pingo Doce</option><option>Pizzaria</option></select></div>
         <div><label>Escolher preço</label><select id="p_ref" onchange="applySelectedReference()"><option value="">Escolher o preço</option></select></div>
-        <div><label>Marca (opcional)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
-        <div><label>Quanto paga? (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode substituir a referência" oninput="markManualPrice()"></div>
+        <div><label>Marca (se quiser)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
+        <div><label>Quanto paga? (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode escrever o preço que paga" oninput="markManualPrice()"></div>
         <div><label>Quanto traz a embalagem?</label><input id="p_packqty" inputmode="decimal" value="1"></div>
         <div><label>Se usa só parte da embalagem, quanto usa?</label><input id="p_consumed" inputmode="decimal" placeholder="Vazio = embalagem inteira"><div class="small">Deixe vazio se usa a embalagem toda.</div></div>
         <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select></div>
         <div><label>Quantas embalagens usa?</label><select id="p_qty" title="Pode escolher meia embalagem ou múltiplos de meia embalagem"><option value="0.5">0,5</option><option value="1" selected>1</option><option value="1.5">1,5</option><option value="2">2</option><option value="2.5">2,5</option><option value="3">3</option><option value="3.5">3,5</option><option value="4">4</option><option value="4.5">4,5</option><option value="5">5</option></select><div class="small">Pode escolher 0,5, 1, 1,5, 2, etc.</div></div>
-        <div><label>Periodicidade</label><select id="p_period"></select></div>
-        <div><label>Custo feito em casa</label><input id="p_home" readonly></div>
+        <div><label>Com que frequência?</label><select id="p_period"></select></div>
+        <div><label>Fazer em casa custa</label><input id="p_home" readonly></div>
       </div>
       <p id="p_note" class="small"></p>
-      <button onclick="addSaving()">Adicionar ao resumo</button>
+      <button onclick="addSaving()">Adicionar</button>
     </div>
     <div class="card">
-      <div class="row"><button class="secondary" onclick="newSavingsSimulation()">Nova simulação</button></div>
-      <h3>💰 Poupança mensal e anual</h3>
+      <div class="row"><button class="secondary" onclick="newSavingsSimulation()">Começar de novo</button></div>
+      <h3>💰 Quanto poupa</h3>
       <div id="savList"></div>
       <div id="savTotal" class="result"></div>
     </div>
     <div class="card">
-      <h3>💳 Impacto no financiamento</h3>
+      <h3>💳 E na mensalidade?</h3>
       <div class="grid3">
         <div><label>Mensalidade (€)</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: 39,50" oninput="renderSavings()"></div>
         <div><label>N.º de meses</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"></div>
