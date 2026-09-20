@@ -381,6 +381,7 @@ function renderSavings(){
 }
 function savingsText(){
   const t=savingsTotals();
+  if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
   const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço indicado":x.priceSource==="referência"?"preço de referência":"preço registado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:"sem poupança nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const day=t.annual/365, week=t.annual/52;
