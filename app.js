@@ -129,7 +129,7 @@ function initSavings(){
 function loadFormats(){
   const name=$("p_prod").value, p = PRODUCTS[name];
   $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
-  $("p_unit").value = p.unit;
+  $("p_unit").value = p.unit;\n  $("p_unit").disabled = true;\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
   $("p_home").value = p.home==null ? "A validar" : euro(p.home)+" / "+p.label;
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
@@ -175,7 +175,15 @@ function applySelectedReference(){
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
-function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfunction calculateSavingScenario({price,pack,qty,consumedEach,period,home,yieldAmount}){
+function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
+function unitLabel(unit){ return unit==="un"?"unidades":unit; }
+function unitGuidance(productUnit){
+  return productUnit==="un"
+    ?"Neste produto compare por unidades. Ex.: pack com 8 iogurtes → embalagem = 8 unidades."
+    :productUnit==="g"
+      ?"Neste produto compare por gramas. Ex.: embalagem de 500 g → embalagem = 500 g."
+      :"Neste produto compare por mililitros. Ex.: embalagem de 1 L → embalagem = 1000 ml.";
+}\nfunction calculateSavingScenario({price,pack,qty,consumedEach,period,home,yieldAmount}){
   const occ=yearlyOccurrences(period);
   const consumed=consumedEach*qty;
   const homeCost=(consumed/yieldAmount)*home;
@@ -272,7 +280,7 @@ function addSaving(){
   if(!Number.isFinite(price)||!Number.isFinite(pack)||!Number.isFinite(qty)||!Number.isFinite(consumedEach)){ alert("Há um valor que não está certo. Confirme os números."); return; }
   if(consumedEach>pack){ alert("Não pode usar mais do que a embalagem traz."); return; }
   if(consumedEach<=0){ alert("Indique quanto usa."); return; }
-  if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
+  if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use "+unitLabel(p.unit)+"."); return; }
   if(!canUseHomeCost(p)){ alert("Ainda estamos a confirmar quanto custa fazer este produto em casa. Por enquanto, não o vamos usar."); return; }
   const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && String(x.brand||"").trim().toLocaleLowerCase("pt")===String($("p_brand").value||"").trim().toLocaleLowerCase("pt") && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && x.unit===$("p_unit").value && Number(x.qty)===qty && x.period===period && Number(x.consumedEach||x.pack)===Number(consumedEach));
   if(duplicate){
