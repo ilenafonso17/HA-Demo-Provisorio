@@ -532,7 +532,11 @@ function newSavingsSimulation(){
   if($("p_packqty")) $("p_packqty").value="";
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
+  if($("p_use_all")) $("p_use_all").value="yes";
+  if($("add_feedback")) $("add_feedback").textContent="";
   loadFormats();
+  togglePartialUse();
+  syncBrandVisibility();
   if($("p_ref")){
     $("p_ref").innerHTML='<option value="">Não usar referência</option>';
     $("p_ref").value="";
