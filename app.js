@@ -287,6 +287,7 @@ function loadReferenceOptions(){
   if(refs.length){ $("p_ref").value="0"; applySelectedReference(); }
   else { $("p_ref").value=""; $("p_brand").value=""; $("p_price").value=""; }
 }
+function markManualPrice(){ if($("p_ref")) $("p_ref").value=""; }
 function applySelectedReference(){
   const name=$("p_prod").value, store=$("p_store").value, refs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===store));
   const idx=$("p_ref").value;
