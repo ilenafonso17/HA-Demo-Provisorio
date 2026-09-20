@@ -161,6 +161,8 @@ function loadFormats(){
   if($("p_consumed_label")) $("p_consumed_label").textContent=p.unit==="g"?"Quantos g usa de cada embalagem?":p.unit==="ml"?"Quantos ml usa de cada embalagem?":"Quantas unidades usa de cada embalagem?";
   if($("p_consumed_help")) $("p_consumed_help").textContent=p.unit==="g"?"Ex.: embalagem de 500 g e usa metade → escreva 250.":p.unit==="ml"?"Ex.: embalagem de 1000 ml e usa metade → escreva 500.":"Ex.: pack com 8 unidades e usa 4 → escreva 4.";
   $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
+  if($("p_home_display")) $("p_home_display").textContent=usable ? euro(p.home)+" para "+p.label : "Em validação";
+  if($("p_home_help")) $("p_home_help").textContent=usable ? "Valor de referência do Tachinho para produzir "+p.label+" em casa." : "Este custo ainda está a ser validado e, por segurança, este produto não entra nos cálculos.";
   const addBtn=document.querySelector('button[onclick="addSaving()"]');
   if(addBtn){ addBtn.disabled=!usable; addBtn.title=usable?"":"Este produto ainda não tem o custo de fazer em casa validado."; }
   const refs=db.prices?.references?.[name]||[];
