@@ -342,12 +342,20 @@ function newSavingsSimulation(){
   if($("roi_monthly")) $("roi_monthly").value="";
   if($("roi_months")) $("roi_months").value="";
   if($("roi_total")) $("roi_total").value="";
-  ["p_brand","p_price","p_consumed"].forEach(id=>{if($(id)) $(id).value="";});
-  if($("p_qty")) $("p_qty").value="1";
   if($("p_store")) $("p_store").value="";
   if($("p_prod")) $("p_prod").selectedIndex=0;
+  if($("p_brand")) $("p_brand").value="";
+  if($("p_price")) $("p_price").value="";
+  if($("p_packqty")) $("p_packqty").value="";
+  if($("p_consumed")) $("p_consumed").value="";
+  if($("p_qty")) $("p_qty").value="1";
   loadFormats();
-  if($("p_ref")) $("p_ref").innerHTML='<option value="">Escolher o preço</option>';
+  if($("p_ref")){
+    $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>';
+    $("p_ref").value="";
+  }
+  if($("p_ref_help")) $("p_ref_help").textContent="Escolha primeiro onde compra.";
+  sessionStorage.removeItem("tachinho_first_add_tip");
   persist();
   window.scrollTo({top:0,behavior:"smooth"});
 }
