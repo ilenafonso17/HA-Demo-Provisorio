@@ -410,8 +410,8 @@ function renderSavings(){
   const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0 && !(Number(x.extraHomeCost)>0));
   const extraItemsNote=extraItems.length?"\n\nFica mais caro feito em casa nesta comparação: "+extraItems.map(x=>x.p).join(", ")+".":"";
   const noSaving=zeroItems.length?"\n\nSem diferença nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
-  const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"):"";
-  const balanceLines=t.extraAnnual>0?`Poupança encontrada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nCustos adicionais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\nSaldo líquido: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"}\nEquivalência do saldo líquido: ${euro(day)}/dia · ${euro(week)}/semana`:`Poupança estimada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nEquivalência: ${euro(day)}/dia · ${euro(week)}/semana`;
+  const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"):"";
+  const balanceLines=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica mais caro: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\nNo total: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}\nPor dia e por semana: ${euro(day)}/dia · ${euro(week)}/semana`:`Poupança estimada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nEquivalência: ${euro(day)}/dia · ${euro(week)}/semana`;
   $("savTotal").textContent=count?`Resumo · ${count} produto${count===1?"":"s"}\n${balanceLines}${highlights}${extraItemsNote}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
   const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
   const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
@@ -432,11 +432,11 @@ function savingsText(){
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
   const netDay=netAnnual/365, netWeek=netAnnual/52;
-  const gross=t.extraAnnual>0?`Poupança encontrada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nCustos adicionais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
+  const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica mais caro: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
   const saldoLabel=t.extraAnnual>0?"Saldo líquido":"Poupança estimada";
   const equivalenciaLabel=t.extraAnnual>0?"Equivalência do saldo líquido":"Equivalência da poupança";
   const equivalencia=netAnnual===0?"":`\n${equivalenciaLabel}: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
-  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"}${equivalencia}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
+  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
 }
 async function copySavings(){
   if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar a simulação."); return; }
