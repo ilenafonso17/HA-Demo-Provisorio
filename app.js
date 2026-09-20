@@ -35,14 +35,14 @@ const PRODUCTS = {
   "Bechamel": {home:0.78, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Maionese": {home:0.62, yield:300, unit:"g", label:"300 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Massa quebrada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
-  "Massa folhada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"referência a validar", periods:["semana","mês","2 meses","3 meses"]},
+  "Massa folhada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"sugerido a validar", periods:["semana","mês","2 meses","3 meses"]},
   "Farinha de arroz": {home:0.23, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Iogurte líquido": {home:1.05, yield:1000, unit:"ml", label:"aprox. 1 L", status:"calculado por receita — a validar", source:"Base Cookidoo para iogurte líquido; leite meio-gordo + fermento/iogurte de arranque. Valor conservador provisório, a afinar por receita/sabor e rendimento final.", periods:["dia","semana","mês"]},
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar — sem receita oficial de produção confirmada", source:"Não usar no cálculo até existir receita-base de produção e rendimento verificáveis.", periods:["semana","mês"]},
-  "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"estimativa mínima — não usar como referência final", source:"Cookidoo · Pão de água com massa-mãe (620 g); 0,45 € cobre essencialmente a farinha T65. Falta fechar água/sal/azeite e manutenção da massa-mãe.", periods:["semana","mês"]},
-  "Pão de Mafra": {home:0.43, yield:650, unit:"g", label:"650 g", status:"estimativa mínima — não usar como referência final", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g): 550 g farinha T65 + 50 g farinha de centeio + 50 g isco; falta fechar centeio, isco, sal e azeite.", periods:["semana","mês"]},
-  "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços de referência de 20/09/2026", periods:["semana","mês"]}
+  "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"estimativa mínima — não usar como sugerido final", source:"Cookidoo · Pão de água com massa-mãe (620 g); 0,45 € cobre essencialmente a farinha T65. Falta fechar água/sal/azeite e manutenção da massa-mãe.", periods:["semana","mês"]},
+  "Pão de Mafra": {home:0.43, yield:650, unit:"g", label:"650 g", status:"estimativa mínima — não usar como sugerido final", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g): 550 g farinha T65 + 50 g farinha de centeio + 50 g isco; falta fechar centeio, isco, sal e azeite.", periods:["semana","mês"]},
+  "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços de sugerido de 20/09/2026", periods:["semana","mês"]}
 };
 
 function defaultPrices(){
@@ -75,7 +75,7 @@ function defaultPrices(){
         {store:"Continente",brand:"Continente Equilíbrio",price:2.49,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Maionese":[
-        {store:"Continente",brand:"Hellmann's",price:4.84,pack:416,unit:"g",format:"416 g",note:"Preço normal observado online em 20/09/2026; referência promocional não usada."}
+        {store:"Continente",brand:"Hellmann's",price:4.84,pack:416,unit:"g",format:"416 g",note:"Preço normal observado online em 20/09/2026; sugerido promocional não usada."}
       ],
       "Massa folhada":[
         {store:"Auchan",brand:"Auchan",price:1.20,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."},
@@ -265,7 +265,7 @@ function loadFormats(){
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Custa fazer em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Custa fazer em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de sugerido; última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
   loadReferenceOptions();
 }
 function sortReferences(refs){
@@ -307,8 +307,8 @@ function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?1
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
-  if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado · custo caseiro validado + preço real"};
-  if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Bom valor de referência · custo caseiro validado + preço sugerido"};
+  if(p.status==="validado" && priceSource==="indicado") return {level:"alta",label:"🟢 Confirmado · custo caseiro validado + preço real"};
+  if(p.status==="validado" && priceSource==="sugerido") return {level:"boa",label:"🟢 Bom valor de sugerido · custo caseiro validado + preço sugerido"};
   return {level:"provisoria",label:"🟡 Ainda a confirmar · custo por receita ainda a validar"};
 }
 function validationState(p){
@@ -323,7 +323,7 @@ function addSaving(){
   const refIdx=$("p_ref") ? $("p_ref").value : "";
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
-  const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
+  const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "sugerido" : "indicado";
   const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && String(x.brand||"").trim().toLocaleLowerCase("pt")===String($("p_brand").value||"").trim().toLocaleLowerCase("pt") && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && x.unit===$("p_unit").value && Number(x.qty)===qty && x.period===period && Number(x.consumedEach||x.pack)===Number(consumedEach));
   if(duplicate){
     if(!confirm("Já adicionou esta comparação de "+name+".\n\nOK = manter as duas\nCancelar = não duplicar")) return;
@@ -346,7 +346,7 @@ function addSaving(){
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=consumedEach*qty, homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference), occ=yearlyOccurrences(period);
   const confidence=calculationConfidence(p,priceSource);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="sugerido"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
@@ -375,7 +375,7 @@ function newSavingsSimulation(){
   if($("p_qty")) $("p_qty").value="1";
   if($("p_unit")) $("p_unit").value="g";
   if($("p_store")) $("p_store").value="";
-  if($("p_ref")) $("p_ref").innerHTML='<option value="">— escolha uma referência —</option>';
+  if($("p_ref")) $("p_ref").innerHTML='<option value="">— escolha uma sugerido —</option>';
   if($("p_product")) $("p_product").selectedIndex=0;
   if($("p_freq")) $("p_freq").selectedIndex=0;
   persist();
@@ -398,7 +398,7 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Segurança do valor</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço que encontrámos":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Segurança do valor</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="indicado"?"Preço que paga":x.priceSource==="sugerido"?"Preço que encontrámos":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
   const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
   const day=netAnnual/365, week=netAnnual/52;
@@ -428,7 +428,7 @@ function renderSavings(){
 function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
-  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço indicado":x.priceSource==="referência"?"preço sugerido":"preço registado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
+  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="indicado"?"preço que paga":x.priceSource==="sugerido"?"preço sugerido":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
   const netDay=netAnnual/365, netWeek=netAnnual/52;
@@ -436,7 +436,7 @@ function savingsText(){
   const saldoLabel=t.extraAnnual>0?"Saldo líquido":"Poupança estimada";
   const equivalenciaLabel=t.extraAnnual>0?"Equivalência do saldo líquido":"Equivalência da poupança";
   const equivalencia=netAnnual===0?"":`\n${equivalenciaLabel}: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
-  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
+  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}\n\nEstes valores são uma estimativa. Podem mudar conforme os preços, as quantidades e a frequência de compra.`;
 }
 async function copySavings(){
   if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar o resumo."); return; }
