@@ -180,7 +180,7 @@ function sortReferences(refs){
 function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
   const refs=sortReferences(all.filter(x=>x.store===store));
-  $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
+  $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
   $("p_ref").value="";
   $("p_brand").value="";
   $("p_price").value="";
@@ -391,7 +391,7 @@ function newSavingsSimulation(){
   if($("p_qty")) $("p_qty").value="1";
   loadFormats();
   if($("p_ref")){
-    $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>';
+    $("p_ref").innerHTML='<option value="">Não usar referência</option>';
     $("p_ref").value="";
   }
   if($("p_ref_help")) $("p_ref_help").textContent="Escolha primeiro onde compra.";
