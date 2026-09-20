@@ -394,8 +394,10 @@ function renderSavings(){
   const mensal=num($("roi_monthly")?.value), months=num($("roi_months")?.value), typedTotal=num($("roi_total")?.value), total=typedTotal||(mensal*months);
   if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
   const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), accumulated=roiMonthly*months, remaining=Math.max(0,total-accumulated), breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
+  const validMonths=Number.isInteger(months)&&months>0;
   const coverText=mensal?(roiMonthly>0?`O saldo líquido mensal estimado equivale a ${pct.toFixed(0)}% da mensalidade indicada.`:`O saldo líquido desta simulação não representa poupança disponível para comparar com a mensalidade.`):"";
-  $("roiResult").textContent=`${coverText}${mensal?"\nValor mensal não coberto pela poupança: "+euro(felt):""}\nPoupança acumulada em ${months||0} meses: ${euro(accumulated)}\nValor ainda não compensado no fim: ${euro(remaining)}${breakEven?"\nTempo estimado para equivaler ao valor total: "+breakEven.toFixed(1)+" meses":""}`;
+  const periodText=validMonths?`\nSaldo líquido acumulado em ${months} meses: ${euro(accumulated)}\nValor ainda não compensado no fim: ${euro(remaining)}`:"\nIndique um prazo válido em meses para calcular o acumulado.";
+  $("roiResult").textContent=`${coverText}${mensal?"\nValor mensal não coberto pelo saldo líquido: "+euro(felt):""}${periodText}${breakEven?"\nTempo estimado para equivaler ao valor total: "+breakEven.toFixed(1)+" meses":""}`;
 }
 function savingsText(){
   const t=savingsTotals();
