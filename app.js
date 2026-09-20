@@ -323,6 +323,7 @@ function addSaving(){
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
   if(consumedEach>pack){ alert("O consumo por embalagem não pode ser superior à quantidade da embalagem."); return; }
+  if(consumedEach<=0){ alert("Indique uma quantidade consumida válida."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=consumedEach*qty, homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, saving=Math.max(0,marketCost-homeCost), occ=yearlyOccurrences(period);
   const confidence=calculationConfidence(p,priceSource);
