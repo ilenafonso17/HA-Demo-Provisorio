@@ -405,7 +405,7 @@ function renderSavings(){
   const count=(db.savings||[]).length;
   const positiveItems=topSavings().filter(x=>(Number(x.annual)||0)>0);
   const top=positiveItems.slice(0,3);
-  const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
+  const highlights=top.length?"\n\nOnde poupa mais:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
   const extraItems=(db.savings||[]).map(normalizedSaving).filter(x=>(Number(x.extraHomeCost)||0)>0);
   const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0 && !(Number(x.extraHomeCost)>0));
   const extraItemsNote=extraItems.length?"\n\nFazer em casa fica a mais: "+extraItems.map(x=>x.p).join(", ")+".":"";
@@ -423,7 +423,7 @@ function renderSavings(){
   const validMonths=Number.isInteger(months)&&months>0;
   const coverText=mensal?(roiMonthly>0?`A poupança cobre cerca de ${pct.toFixed(0)}% da mensalidade.`:`Nesta simulação não há poupança para abater à mensalidade.`):"";
   const periodText=validMonths?`\nPoupança acumulada em ${months} meses: ${euro(accumulated)}\nFica por compensar no fim: ${euro(remaining)}`:"\nDiga durante quantos meses quer fazer a conta.";
-  $("roiResult").textContent=`${coverText}${mensal?"\nFalta pagar por mês: "+euro(felt):""}${periodText}${breakEven?"\nTempo estimado para atingir o valor total: "+breakEven.toFixed(1)+" meses":""}`;
+  $("roiResult").textContent=`${coverText}${mensal?"\nFalta pagar por mês: "+euro(felt):""}${periodText}${breakEven?"\nAo fim de cerca de "+breakEven.toFixed(1)+" meses atinge o valor total.":""}`;
 }
 function savingsText(){
   const t=savingsTotals();
