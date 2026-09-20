@@ -425,7 +425,7 @@ function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não adicionou nenhum produto.";
   const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço encontrado":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
-  const who=$("sim_name")?.value.trim();
+  const who=String($("sim_name")?.value||"").trim().slice(0,40);
   const netAnnual=normalizeMoneyZero(t.annual-(t.extraAnnual||0)), netMonthly=normalizeMoneyZero(t.monthly-(t.extraMonthly||0));
   const netDay=netAnnual/365, netWeek=netAnnual/52;
   const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
