@@ -86,6 +86,10 @@ function defaultPrices(){
       "Granola":[
         {store:"Continente",brand:"Continente Triplo Chocolate",price:2.99,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ],
+      "Pão de Mafra":[
+        {store:"Continente",brand:"Pão de Mafra Comprido Fatiado",price:1.65,pack:500,unit:"g",format:"500 g",note:"Referência comercial mais próxima observada em 20/09/2026; não identificada pelo supermercado como massa-mãe.",validation:"confirmada"},
+        {store:"Auchan",brand:"Pão de Mafra",price:1.35,pack:400,unit:"g",format:"400 g",note:"Referência comercial mais próxima observada em 20/09/2026; não identificada pelo supermercado como massa-mãe.",validation:"confirmada"}
+      ],
       "Iogurte líquido":[
         {store:"Continente",brand:"Continente Cremoso Morango",price:1.65,pack:1000,unit:"g",format:"1 kg",note:"Preço observado online em 20/09/2026; custo de fazer em casa ainda a confirmar."},
         {store:"Continente",brand:"Continente Cremoso Morango",price:1.35,pack:640,unit:"g",format:"4 × 160 g",note:"Preço observado online em 20/09/2026; custo de fazer em casa ainda a confirmar."}
