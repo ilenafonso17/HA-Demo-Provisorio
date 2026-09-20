@@ -91,24 +91,38 @@
   </div>
 
   <div id="savings" class="section">
-    <h2>🛒 Poupança</h2>
+    <h2>🥘 Tachinho</h2>
     <div class="card">
+      <h3>🛒 Produtos e hábitos</h3>
+      <p class="pill">Supermercado × Feito em casa</p>
       <div class="grid3">
         <div><label>Produto</label><select id="p_prod" onchange="loadFormats()"></select></div>
-        <div><label>Formato supermercado</label><select id="p_format" onchange="estimatePrice()"></select></div>
-        <div><label>Supermercado</label><select id="p_store" onchange="estimatePrice()"><option>Continente</option><option>Pingo Doce</option><option>Lidl</option><option>Aldi</option><option>Auchan</option><option>Mercadona</option><option>Intermarché</option><option>Outro</option></select></div>
-        <div><label>Preço supermercado (€)</label><input id="p_price" inputmode="decimal"></div>
-        <div><label>Quantidade</label><input id="p_qty" type="number" value="1"></div>
+        <div><label>Supermercado / origem</label><select id="p_store"><option>Continente</option><option>Pingo Doce</option><option>Lidl</option><option>Aldi</option><option>Auchan</option><option>Mercadona</option><option>Intermarché</option><option>Outro</option></select></div>
+        <div><label>Marca (opcional)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
+        <div><label>Preço pago (€)</label><input id="p_price" inputmode="decimal" placeholder="Ex.: 3,20"></div>
+        <div><label>Quantidade da embalagem</label><input id="p_packqty" inputmode="decimal" value="1"></div>
+        <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select></div>
+        <div><label>Quantas embalagens/vez?</label><input id="p_qty" type="number" min="0.1" step="0.1" value="1"></div>
         <div><label>Periodicidade</label><select id="p_period"></select></div>
+        <div><label>Custo feito em casa</label><input id="p_home" readonly></div>
       </div>
-      <p class="small">O preço do supermercado é estimado consoante produto, formato e supermercado. Pode alterar manualmente.</p>
+      <p id="p_note" class="small"></p>
       <button onclick="addSaving()">Adicionar ao resumo</button>
     </div>
     <div class="card">
-      <h3>Resumo de poupança</h3>
+      <h3>💰 Poupança mensal e anual</h3>
       <div id="savList"></div>
       <div id="savTotal" class="result"></div>
-      <div class="row"><button onclick="copySavings()">Copiar resumo</button><button onclick="whatsappSavings()">Enviar WhatsApp</button></div>
+    </div>
+    <div class="card">
+      <h3>💳 Impacto no financiamento</h3>
+      <div class="grid3">
+        <div><label>Mensalidade (€)</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: 39,50" oninput="renderSavings()"></div>
+        <div><label>N.º de meses</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"></div>
+        <div><label>Valor total pago (€)</label><input id="roi_total" inputmode="decimal" placeholder="Opcional" oninput="renderSavings()"></div>
+      </div>
+      <div id="roiResult" class="result"></div>
+      <div class="row" style="margin-top:12px"><button onclick="copySavings()">Copiar resumo</button><button onclick="whatsappSavings()">Enviar WhatsApp</button></div>
     </div>
   </div>
 
@@ -133,7 +147,7 @@
     <div class="card"><h3>Tabela de preços estimados</h3><p class="small">Edite em formato JSON se quiser ajustar preços. Os valores ficam guardados neste dispositivo.</p><textarea id="priceJson" style="min-height:220px"></textarea><button onclick="savePrices()">Guardar preços</button></div>
     <div class="card"><h3>Backup</h3><div class="row"><button onclick="exportBackup()">Exportar backup</button><button onclick="document.getElementById('importFile').click()">Importar backup</button><button onclick="exportCSV()">Exportar CSV/Excel</button><input id="importFile" type="file" style="display:none" onchange="importBackup(this.files[0])"></div></div>
   </div>
-  <div class="footer">Smart Pro Agente · Gestão Inteligente de Clientes e Demonstrações</div>
+  <div class="footer">Tachinho · Criado por Helena Afonso · © 2026</div>
 </div>
 <script src="app.js"></script>
 </body>
