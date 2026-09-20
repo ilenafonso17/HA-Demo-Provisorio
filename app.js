@@ -391,7 +391,10 @@ function renderSavings(){
   const noSaving=zeroItems.length?"\n\nSem poupança nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
   const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"):"";
   $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${extra}${highlights}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
-  const mensal=num($("roi_monthly")?.value), months=num($("roi_months")?.value), typedTotal=num($("roi_total")?.value), calculatedTotal=mensal>0&&Number.isInteger(months)&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
+  const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
+  const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
+  if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Existe um valor financeiro inválido. Reveja os números introduzidos."; return; }
+  const calculatedTotal=mensal>0&&Number.isInteger(months)&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
   if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Mensalidade, prazo e valor total não podem ser negativos."; return; }
   if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
   const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), accumulated=roiMonthly*months, remaining=Math.max(0,total-accumulated), breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
