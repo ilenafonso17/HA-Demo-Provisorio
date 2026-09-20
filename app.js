@@ -334,7 +334,7 @@ function runMathSelfTests(){
     }
   }
   if(failures.length) console.error("Tachinho: falharam testes matemáticos:",failures);
-  else console.info("Tachinho: testes matemáticos essenciais OK ("+(cases.length+parseCases.length+2+paymentCases.length)+").");
+  else console.info("Tachinho: testes matemáticos essenciais OK — fórmulas, entradas, saldos mistos, limites e mensalidade validados.");
   return failures;
 }
 
