@@ -223,6 +223,15 @@ function applySelectedReference(){\n  syncBrandVisibility();
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
+function referenceStatus(productName,r){
+  const p=PRODUCTS[productName];
+  if(!p || !compatibleUnit(p.unit,r.unit)) return "incompatível";
+  return r.validation==="confirmada"?"confirmada":"por confirmar";
+}
+function referencePriceLabel(r){
+  const promo=Number(r?.promoPrice);
+  return Number.isFinite(promo)&&promo>0 ? euro(r.price)+" preço normal · promoção observada "+euro(promo) : euro(r.price);
+}
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function unitLabel(unit){ return unit==="un"?"unidades":unit; }
 function unitGuidance(productUnit){
