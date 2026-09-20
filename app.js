@@ -186,7 +186,7 @@ function sortReferences(refs){
 function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
   const refs=sortReferences(all.filter(x=>x.store===store));
-  $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
+  $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+escapeHTML(referencePriceLabel(r))+' · '+escapeHTML(r.format||"")+'</option>').join("");
   $("p_ref").value="";\n  syncBrandVisibility();
   $("p_brand").value="";
   $("p_price").value="";
@@ -219,7 +219,7 @@ function applySelectedReference(){\n  syncBrandVisibility();
   $("p_price").value=r.price;
   $("p_packqty").value=r.pack;
   $("p_unit").value=r.unit;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(r.unit);
-  if($("p_ref_help")) $("p_ref_help").textContent="Preço de referência selecionado: "+(r.store||store)+" · "+(r.brand||"")+" · "+euro(r.price)+" · "+(r.format||"");
+  if($("p_ref_help")) $("p_ref_help").textContent="Preço de referência selecionado: "+(r.store||store)+" · "+(r.brand||"")+" · "+referencePriceLabel(r)+" · "+(r.format||"");
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
