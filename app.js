@@ -45,6 +45,8 @@ const PRODUCTS = {
   "Pão alentejano": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]}
 };
 
+function defaultPrices(){ return {}; }
+
 let db = loadDB();
 
 function loadDB(){
