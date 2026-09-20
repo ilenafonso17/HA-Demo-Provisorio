@@ -53,7 +53,7 @@ function defaultPrices(){
       ],
       "Queijo fresco":[
         {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:1,unit:"un",format:"1 un / 80 g",note:"Confirmado no Continente Online em 20/09/2026: 0,59 € / 80 g."},
-        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",note:"Confirmado no Continente Online em 20/09/2026: preço normal 2,69 € / 3 × 72 g. Campanhas podem baixar temporariamente o preço."}
+        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",promoPrice:2.28,priceType:"normal",note:"Continente Online 20/09/2026: preço normal 2,69 € / 3 × 72 g; campanha observada 2,28 €. A referência-base usa o preço normal."}
       ],
       "Iogurte de soja":[
         {store:"Auchan",brand:"Auchan",price:1.39,pack:4,unit:"un",format:"4 × 100 g",note:"Confirmado no Auchan Online em 20/09/2026: 1,39 € / 4 × 100 g."},
@@ -368,7 +368,7 @@ function auditReferenceData(){
       if(!Number.isFinite(Number(r.price)) || Number(r.price)<=0) issues.push(id+" · preço inválido");
       if(!Number.isFinite(Number(r.pack)) || Number(r.pack)<=0) issues.push(id+" · quantidade inválida");
       if(!["g","ml","un"].includes(r.unit)) issues.push(id+" · unidade inválida");
-      if(!String(r.format||"").trim()) issues.push(id+" · formato não descrito");
+      if(!String(r.format||"").trim()) issues.push(id+" · formato não descrito");\n      if(r.promoPrice!=null && (!Number.isFinite(Number(r.promoPrice)) || Number(r.promoPrice)<=0)) issues.push(id+" · promoção inválida");\n      if(r.promoPrice!=null && Number(r.promoPrice)>=Number(r.price)) issues.push(id+" · promoção não é inferior ao preço normal");
       if(!compatibleUnit(p.unit,r.unit)) issues.push(id+" · unidade incompatível com "+productName+" (fica bloqueada)");
     });
   }
