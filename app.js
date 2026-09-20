@@ -427,7 +427,10 @@ async function copySavings(){
     alert(ok?"Resumo copiado.":"Não foi possível copiar automaticamente. Pode selecionar e copiar o resumo manualmente.");
   }
 }
-function whatsappSavings(){ window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText()); }
+function whatsappSavings(){
+  if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de enviar a simulação por WhatsApp."); return; }
+  window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText());
+}
 
 /* AGENDA / ESTATÍSTICAS */
 function agendaItems(){
