@@ -338,6 +338,8 @@ function addSaving(){
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
   if($("p_prod")) $("p_prod").focus();
+  const added=(db.savings||[]).length;
+  if(added===1) alert("Produto adicionado. Pode escolher outro produto ou consultar o resumo.");
 }
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
