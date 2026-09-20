@@ -7,7 +7,7 @@ const SECTIONS = {
   dashboard:"Início",
   clients:"Clientes",
   finance:"Financiamento",
-  savings:"Poupança",
+  savings:"🥘 Tachinho",
   agenda:"Agenda",
   stats:"Estatísticas",
   recruits:"Recrutas",
