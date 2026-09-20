@@ -167,7 +167,7 @@ function clearClient(){
   $("c_estado").value="Pendente";
 }
 function removeClient(id){
-  if(confirm("Apagar esta cliente?")){
+  if(confirm("Retirar esta cliente?")){
     db.clients = db.clients.filter(c=>String(c.id)!==String(id));
     persist();
   }
@@ -220,7 +220,7 @@ function renderClients(){
       <td>${escapeHTML(c.modelo||"")}</td>
       <td>${escapeHTML(c.demoData||"")}<br><span class="small">${escapeHTML(c.demoTipo||"")} · Loja: ${escapeHTML(c.loja||"")}</span></td>
       <td>${escapeHTML(c.compra||"—")}<br><span class="small">VP: ${escapeHTML(c.vp||"")} · ${euro(num(c.valorVenda))}</span></td>
-      <td><button class="secondary" onclick="editClient('${c.id}')">Editar</button> <button class="danger" onclick="removeClient('${c.id}')">Apagar</button></td>
+      <td><button class="secondary" onclick="editClient('${c.id}')">Editar</button> <button class="danger" onclick="removeClient('${c.id}')">Retirar</button></td>
     </tr>`).join("")}
   </table>`;
 }
@@ -360,7 +360,7 @@ function addSaving(){
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
   if(!item) return;
-  if(!confirm("Apagar "+(item.p||"este produto")+" desta simulação?")) return;
+  if(!confirm("Retirar "+(item.p||"este produto")+" desta simulação?")) return;
   db.savings=db.savings.filter(x=>String(x.id)!==String(id));
   persist();
 }
@@ -398,7 +398,7 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Retirar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
   const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
   const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);
@@ -516,7 +516,7 @@ function removeRecruit(id){
 }
 function renderRecruits(){
   if(!$("r_list")) return;
-  $("r_list").innerHTML = db.recruits.map(r=>`<div class="card"><b>${escapeHTML(r.nome)}</b><pre>${escapeHTML(r.contactos)}</pre><button class="danger" onclick="removeRecruit('${r.id}')">Apagar</button></div>`).join("") || "Sem recrutas registadas.";
+  $("r_list").innerHTML = db.recruits.map(r=>`<div class="card"><b>${escapeHTML(r.nome)}</b><pre>${escapeHTML(r.contactos)}</pre><button class="danger" onclick="removeRecruit('${r.id}')">Retirar</button></div>`).join("") || "Sem recrutas registadas.";
 }
 
 /* BACKUP / PREÇOS */
