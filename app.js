@@ -329,7 +329,9 @@ function addSaving(){
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   // Validar primeiro; só depois procurar duplicados, para não mostrar avisos confusos com campos incompletos.
   if(!p){ alert("Escolha um produto."); return; }
-  if(!price||!pack||!qty){ alert("Preencha o preço, o tamanho da embalagem e quantas embalagens usa."); return; }
+  // Distinguir campos vazios de números inválidos/zero para dar uma mensagem certa.
+  const priceRaw=String($("p_price").value||"").trim(), packRaw=String($("p_packqty").value||"").trim(), qtyRaw=String($("p_qty").value||"").trim();
+  if(priceRaw==="" || packRaw==="" || qtyRaw===""){ alert("Preencha o preço, o tamanho da embalagem e quantas embalagens usa."); return; }
   if(!Number.isFinite(price)||!Number.isFinite(pack)||!Number.isFinite(qty)||!Number.isFinite(consumedEach)){ alert("Há um valor que não está certo. Confirme os números."); return; }
   if(consumedEach>pack){ alert("Não pode usar mais do que a embalagem traz."); return; }
   if(consumedEach<=0){ alert("Indique quanto usa."); return; }
