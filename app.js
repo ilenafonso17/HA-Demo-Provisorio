@@ -437,7 +437,7 @@ function addSaving(){
   const partialRaw=$("p_use_all")?.value==="no" ? String($("p_consumed")?.value||"").trim() : "";
   const consumedEach=partialRaw==="" ? pack : parseNumber(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
-  const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value && compatibleUnit(p?.unit,x.unit)));
+  const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value && referenceStatus(name,x)==="confirmada"));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   // Validar primeiro; só depois procurar duplicados, para não mostrar avisos confusos com campos incompletos.
