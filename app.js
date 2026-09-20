@@ -491,6 +491,8 @@ function addSaving(){
   if($("savHeadline")) $("savHeadline").scrollIntoView({behavior:"smooth",block:"center"});
   if($("p_consumed")) $("p_consumed").value="";\n  if($("p_use_all")) $("p_use_all").value="yes";\n  togglePartialUse();
   if($("p_qty")) $("p_qty").value="1";
+  renderSavings();
+  renderPayment();
 }
 function addAnotherProduct(){
   if($("p_prod")) $("p_prod").selectedIndex=0;
