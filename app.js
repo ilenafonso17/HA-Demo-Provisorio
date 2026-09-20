@@ -269,13 +269,18 @@ function loadFormats(){
 }
 function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
-  const refs=all.filter(x=>x.store===store);
+  const refs=all.filter(x=>x.store===store).sort((a,b)=>{
+    const ua=String(a.unit||""), ub=String(b.unit||"");
+    if(ua===ub) return (Number(a.pack)||0)-(Number(b.pack)||0);
+    const order={un:0,g:1,ml:2};
+    return (order[ua]??9)-(order[ub]??9);
+  });
   $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
   if(refs.length){ $("p_ref").value="0"; applySelectedReference(); }
   else { $("p_ref").value=""; $("p_brand").value=""; $("p_price").value=""; }
 }
 function applySelectedReference(){
-  const name=$("p_prod").value, store=$("p_store").value, refs=(db.prices?.references?.[name]||[]).filter(x=>x.store===store);
+  const name=$("p_prod").value, store=$("p_store").value, refs=(db.prices?.references?.[name]||[]).filter(x=>x.store===store).sort((a,b)=>{const ua=String(a.unit||""),ub=String(b.unit||"");if(ua===ub)return (Number(a.pack)||0)-(Number(b.pack)||0);const order={un:0,g:1,ml:2};return (order[ua]??9)-(order[ub]??9);});
   const idx=$("p_ref").value;
   if(idx==="") return;
   const r=refs[Number(idx)];
@@ -304,7 +309,7 @@ function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
   const consumedEach=num($("p_consumed")?.value)||pack;
   const refIdx=$("p_ref") ? $("p_ref").value : "";
-  const matchingRefs=(db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value);
+  const matchingRefs=(db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value).sort((a,b)=>{const ua=String(a.unit||""),ub=String(b.unit||"");if(ua===ub)return (Number(a.pack)||0)-(Number(b.pack)||0);const order={un:0,g:1,ml:2};return (order[ua]??9)-(order[ub]??9);});
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
