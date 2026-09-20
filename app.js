@@ -363,6 +363,14 @@ function auditProductData(){
   return issues;
 }
 
+function referenceFreshness(){
+  const updated=new Date((db.prices?.updatedAt||"")+"T00:00:00");
+  const review=new Date((db.prices?.reviewAfter||"")+"T00:00:00");
+  const now=new Date();
+  if(Number.isNaN(updated.getTime()) || Number.isNaN(review.getTime())) return "invalid";
+  if(now>review) return "expired";
+  return "current";
+}
 function auditReferenceData(){
   const issues=[];
   const refs=db.prices?.references||{};
