@@ -232,7 +232,7 @@ function initFinance(){
     <label>Título</label><input id="f_t${i}" placeholder="Ex.: TM7 + Bundle">
     <label>Valor a pronto (€)</label><input id="f_pp${i}" inputmode="decimal" placeholder="Ex.: 1549">
     <label>Meses</label><input id="f_m${i}" inputmode="numeric" placeholder="Ex.: 50">
-    <label>Mensalidade (€)</label><input id="f_v${i}" inputmode="decimal" placeholder="Ex.: 39,50">
+    <label>Mensalidade</label><input id="f_v${i}" inputmode="decimal" placeholder="Ex.: 39,50">
     <div id="f_r${i}" class="small" style="margin-top:12px"></div>
   </div>`).join("");
 }
@@ -265,7 +265,7 @@ function loadFormats(){
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Fazer em casa custa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
   loadReferenceOptions();
 }
 function sortReferences(refs){
@@ -398,7 +398,7 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Confiança</th><th>Poupança/mês</th><th>Poupança/ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço indicado":x.priceSource==="referência"?"Preço sugerido":"Preço indicado";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Confiança</th><th>Poupa/mês</th><th>Poupa/ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço indicado":x.priceSource==="referência"?"Preço sugerido":"Preço indicado";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
   const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
   const day=netAnnual/365, week=netAnnual/52;
