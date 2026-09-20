@@ -378,13 +378,12 @@ function newSavingsSimulation(){
   if($("roi_monthly")) $("roi_monthly").value="";
   if($("roi_months")) $("roi_months").value="";
   if($("roi_total")) $("roi_total").value="";
-  ["p_brand","p_price","p_pack","p_consumed"].forEach(id=>{if($(id)) $(id).value="";});
+  ["p_brand","p_price","p_consumed"].forEach(id=>{if($(id)) $(id).value="";});
   if($("p_qty")) $("p_qty").value="1";
-  if($("p_unit")) $("p_unit").value="g";
   if($("p_store")) $("p_store").value="";
-  if($("p_ref")) $("p_ref").innerHTML='<option value="">— escolha um preço —</option>';
-  if($("p_product")) $("p_product").selectedIndex=0;
-  if($("p_freq")) $("p_freq").selectedIndex=0;
+  if($("p_prod")) $("p_prod").selectedIndex=0;
+  loadFormats();
+  if($("p_ref")) $("p_ref").innerHTML='<option value="">Escolher o preço</option>';
   persist();
   show("savings");
 }
