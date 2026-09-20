@@ -155,7 +155,7 @@ function loadFormats(){
   const name=$("p_prod").value, p = PRODUCTS[name];
   const usable=canUseHomeCost(p);
   $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");\n  if($("p_period_help")) $("p_period_help").textContent="Ex.: se indicou 2 embalagens e escolher “1 vez por semana”, o Tachinho considera essas 2 embalagens por semana.";
-  $("p_unit").value = p.unit;\n  $("p_unit").disabled = true;\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
+  $("p_unit").value = p.unit;\n  $("p_unit").disabled = false;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(p.unit);\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
   $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
   const addBtn=document.querySelector('button[onclick="addSaving()"]');
   if(addBtn){ addBtn.disabled=!usable; addBtn.title=usable?"":"Este produto ainda não tem o custo de fazer em casa validado."; }
@@ -185,7 +185,7 @@ function loadReferenceOptions(){
   $("p_brand").value="";
   $("p_price").value="";
   $("p_packqty").value="";
-  $("p_unit").value=PRODUCTS[name]?.unit||"g";
+  $("p_unit").value=PRODUCTS[name]?.unit||"g";\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(PRODUCTS[name]?.unit||"g");
   if(refs.length && $("p_ref_help")) $("p_ref_help").textContent="Encontrámos "+refs.length+" preço(s) de referência. Escolha um ou escreva o preço real que a pessoa paga.";
   else if($("p_ref_help")) $("p_ref_help").textContent=store?"Não temos preço de referência para esta combinação. Escreva o preço real que a pessoa paga.":"Escolha primeiro onde compra.";
 }
@@ -205,7 +205,7 @@ function applySelectedReference(){
   $("p_brand").value=r.brand||"";
   $("p_price").value=r.price;
   $("p_packqty").value=r.pack;
-  $("p_unit").value=r.unit;
+  $("p_unit").value=r.unit;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(r.unit);
   if($("p_ref_help")) $("p_ref_help").textContent="Preço de referência selecionado: "+(r.store||store)+" · "+(r.brand||"")+" · "+euro(r.price)+" · "+(r.format||"");
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
