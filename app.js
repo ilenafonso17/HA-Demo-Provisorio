@@ -189,7 +189,23 @@ function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfu
   };
 }
 
-function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }
+function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }\nfunction calculatePaymentImpact({netMonthly,monthlyPayment=0,months=0,total=0}){
+  const saving=Math.max(0,Number(netMonthly)||0);
+  const payment=Math.max(0,Number(monthlyPayment)||0);
+  const validMonths=Number.isInteger(Number(months))&&Number(months)>0;
+  const period=validMonths?Number(months):0;
+  const effectiveTotal=Math.max(0,Number(total)||0) || (payment>0&&period>0?payment*period:0);
+  return {
+    saving,payment,months:period,total:effectiveTotal,
+    percent:payment>0?(saving/payment)*100:0,
+    missingPerMonth:payment>0?Math.max(0,payment-saving):0,
+    surplusPerMonth:payment>0?Math.max(0,saving-payment):0,
+    accumulated:period>0?saving*period:0,
+    remaining:period>0&&effectiveTotal>0?Math.max(0,effectiveTotal-saving*period):null,
+    breakEvenMonths:saving>0&&effectiveTotal>0?effectiveTotal/saving:0
+  };
+}
+
 function runMathSelfTests(){
   const cases=[
     ["embalagem inteira", {price:2,pack:1000,qty:1,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:1000,monthly:1,annual:12,extraHomeCost:0}],
@@ -204,6 +220,19 @@ function runMathSelfTests(){
   const failures=[];
   for(const [name,input,expected] of cases){
     const got=calculateSavingScenario(input);
+    for(const [key,value] of Object.entries(expected)){
+      if(!nearlyEqual(Number(got[key]),Number(value))) failures.push(name+" · "+key);
+    }
+  }
+  const paymentCases=[
+    ["mensalidade parcial",{netMonthly:30,monthlyPayment:50,months:12,total:600},{percent:60,missingPerMonth:20,surplusPerMonth:0,accumulated:360,remaining:240,breakEvenMonths:20}],
+    ["mensalidade 100%",{netMonthly:50,monthlyPayment:50,months:12,total:600},{percent:100,missingPerMonth:0,surplusPerMonth:0,accumulated:600,remaining:0,breakEvenMonths:12}],
+    ["poupança excede mensalidade",{netMonthly:70,monthlyPayment:50,months:12,total:600},{percent:140,missingPerMonth:0,surplusPerMonth:20,accumulated:840,remaining:0,breakEvenMonths:600/70}],
+    ["sem poupança líquida",{netMonthly:-10,monthlyPayment:50,months:12,total:600},{percent:0,missingPerMonth:50,surplusPerMonth:0,accumulated:0,remaining:600,breakEvenMonths:0}],
+    ["total calculado pela mensalidade",{netMonthly:25,monthlyPayment:50,months:10,total:0},{total:500,accumulated:250,remaining:250,breakEvenMonths:20}]
+  ];
+  for(const [name,input,expected] of paymentCases){
+    const got=calculatePaymentImpact(input);
     for(const [key,value] of Object.entries(expected)){
       if(!nearlyEqual(Number(got[key]),Number(value))) failures.push(name+" · "+key);
     }
@@ -346,10 +375,10 @@ function renderSavings(){
   if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Há um valor que não está certo. Confirme os números."; return; }
   if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Os valores não podem ser negativos."; return; }
   if(months>0 && !Number.isInteger(months)){ $("roiResult").textContent="O número de meses tem de ser um número inteiro."; return; }
-  const calculatedTotal=mensal>0&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
-  if(!mensal&&!total){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
-  const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), validMonths=Number.isInteger(months)&&months>0;
-  const accumulated=validMonths?roiMonthly*months:0, remaining=validMonths?Math.max(0,total-accumulated):null, breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
+  if(!mensal&&!typedTotal){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
+  const impact=calculatePaymentImpact({netMonthly,monthlyPayment:mensal,months,total:typedTotal});
+  const roiMonthly=impact.saving, pct=impact.percent, felt=impact.missingPerMonth, validMonths=impact.months>0;
+  const accumulated=impact.accumulated, remaining=impact.remaining, breakEven=impact.breakEvenMonths, total=impact.total;
   const coverText=mensal?(roiMonthly>0?(roiMonthly>=mensal?`A poupança cobre 100% da mensalidade.`:`A poupança ajuda a pagar cerca de ${pct.toFixed(0)}% da mensalidade.`):`Aqui não há poupança para ajudar a pagar a mensalidade.`):"";
   const monthlyText=mensal?(roiMonthly>mensal?`\nA poupança cobre a mensalidade e ainda sobram ${euro(roiMonthly-mensal)} por mês.`:roiMonthly===mensal&&roiMonthly>0?`\nA poupança cobre exatamente a mensalidade.`:`\nDepois da poupança, faltam ${euro(felt)} por mês.`):"";
   const periodText=validMonths?`\nAo fim de ${months} meses, a poupança acumulada é ${euro(accumulated)}.${total?"\nNesse momento, ficam por compensar "+euro(remaining)+".":""}`:"";
