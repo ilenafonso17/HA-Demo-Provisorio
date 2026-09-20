@@ -347,6 +347,11 @@ function runMathSelfTests(){
   return failures;
 }
 
+function pendingHomeCostProducts(){
+  return Object.entries(PRODUCTS).filter(([,p])=>validationState(p)!=="validated").map(([name,p])=>({
+    name,status:p.status||"a validar",home:p.home,yield:p.yield,unit:p.unit,label:p.label||""
+  }));
+}
 function auditProductData(){
   const issues=[];
   for(const [name,p] of Object.entries(PRODUCTS)){
@@ -359,7 +364,7 @@ function auditProductData(){
     }
   }
   if(issues.length) console.error("Tachinho: problemas nos dados dos produtos:",issues);
-  else console.info("Tachinho: estrutura dos produtos validados OK.");
+  else console.info("Tachinho: estrutura dos produtos validados OK.");\n  const pending=pendingHomeCostProducts();\n  if(pending.length) console.info("Tachinho: custos caseiros ainda bloqueados/por validar:",pending);
   return issues;
 }
 
