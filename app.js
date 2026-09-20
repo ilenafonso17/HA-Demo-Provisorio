@@ -42,7 +42,7 @@ const PRODUCTS = {
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
   "Pão de massa mãe": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
   "Pão de Mafra": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
-  "Pão alentejano": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]}
+  "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços de referência de 20/09/2026", periods:["semana","mês"]}
 };
 
 function defaultPrices(){
@@ -258,7 +258,7 @@ function loadFormats(){
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
   loadReferenceOptions();
 }
 function loadReferenceOptions(){
