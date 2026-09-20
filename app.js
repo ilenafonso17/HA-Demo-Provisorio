@@ -657,9 +657,18 @@ function savingsText(){
   if(safeMensal>0 || safeTotal>0){
     const impact=calculatePaymentImpact({netMonthly,monthlyPayment:safeMensal,months:safeMonths,total:safeTotal});
     if(safeMensal>0){
-      payment="\n\nComparação mensal: a poupança estimada "+(impact.saving>=safeMensal?"pode compensar o valor mensal indicado.":"corresponde a cerca de "+impact.percent.toFixed(0)+"% do valor mensal indicado.");
+      payment="\n\nComparação mensal: "+(impact.saving>safeMensal
+        ?"a poupança cobre o valor mensal indicado e ainda sobram "+euro(impact.surplusPerMonth)+" por mês."
+        :impact.saving===safeMensal && impact.saving>0
+          ?"a poupança cobre exatamente o valor mensal indicado."
+          :impact.saving>0
+            ?"a poupança corresponde a cerca de "+impact.percent.toFixed(0)+"% do valor mensal indicado; faltam "+euro(impact.missingPerMonth)+" por mês."
+            :"aqui não há poupança para ajudar a pagar o valor mensal indicado.");
     }
-    if(impact.months>0) payment+="\nEm "+impact.months+" meses: "+euro(impact.accumulated)+" de poupança estimada acumulada.";
+    if(impact.months>0){
+      payment+="\nEm "+impact.months+" meses: "+euro(impact.accumulated)+" de poupança estimada acumulada.";
+      if(impact.total>0) payment+=" Nesse momento, ficam por compensar "+euro(impact.remaining)+".";
+    }
   }
   return "🥘 Tachinho — Comprar ou fazer?"+(who?" · "+who:"")+"\n\n"+lines+"\n\n"+totalLine+payment+"\n\nEstimativa baseada nos preços, quantidades e frequência indicados.";
 }
