@@ -189,6 +189,30 @@ function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfu
   };
 }
 
+function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }
+function runMathSelfTests(){
+  const cases=[
+    ["embalagem inteira", {price:2,pack:1000,qty:1,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:1000,monthly:1,annual:12,extraHomeCost:0}],
+    ["meia embalagem", {price:2,pack:1000,qty:0.5,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:500,monthly:0.5,annual:6,extraHomeCost:0}],
+    ["consumo parcial", {price:4,pack:1000,qty:1,consumedEach:250,period:"semana",home:2,yieldAmount:1000}, {consumed:250,monthly:6.5,annual:78,extraHomeCost:0}],
+    ["duas embalagens", {price:2,pack:1000,qty:2,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:2000,monthly:2,annual:24,extraHomeCost:0}],
+    ["sem diferença", {price:1,pack:1000,qty:1,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {monthly:0,annual:0,extraHomeCost:0}],
+    ["fazer em casa mais caro", {price:1,pack:1000,qty:1,consumedEach:1000,period:"mês",home:2,yieldAmount:1000}, {monthly:0,annual:0,extraHomeCost:12}],
+    ["2 em 2 meses", {price:2,pack:1000,qty:1,consumedEach:1000,period:"2 meses",home:1,yieldAmount:1000}, {monthly:0.5,annual:6,extraHomeCost:0}],
+    ["3 em 3 meses", {price:2,pack:1000,qty:1,consumedEach:1000,period:"3 meses",home:1,yieldAmount:1000}, {monthly:1/3,annual:4,extraHomeCost:0}]
+  ];
+  const failures=[];
+  for(const [name,input,expected] of cases){
+    const got=calculateSavingScenario(input);
+    for(const [key,value] of Object.entries(expected)){
+      if(!nearlyEqual(Number(got[key]),Number(value))) failures.push(name+" · "+key);
+    }
+  }
+  if(failures.length) console.error("Tachinho: falharam testes matemáticos:",failures);
+  else console.info("Tachinho: testes matemáticos essenciais OK ("+cases.length+").");
+  return failures;
+}
+
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
   if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado"};
@@ -368,5 +392,6 @@ function renderAll(){
   renderSavings();
 }
 initSavings();
+runMathSelfTests();
 renderAll();
 if("serviceWorker" in navigator){ navigator.serviceWorker.register("service-worker.js").catch(()=>{}); }
