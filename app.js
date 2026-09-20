@@ -337,7 +337,7 @@ function addSaving(){
     const mais=restantes ? "\n• + "+restantes+" comparação"+(restantes===1?"":"ões")+" anterior"+(restantes===1?"":"es") : "";
     if(!confirm(name+" já está nesta simulação com outros dados:\n\n"+resumo+mais+"\n\nQuer adicionar esta nova comparação?")) return;
   }
-  if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
+  if(!canUseHomeCost(p)){ alert("Ainda estamos a confirmar o custo de fazer este produto em casa. Por enquanto, não vamos usá-lo na comparação."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
   if(price<=0 || pack<=0 || qty<=0){ alert("Preço, embalagem e quantidade têm de ser superiores a zero."); return; }
   if(!Number.isFinite(price)||!Number.isFinite(pack)||!Number.isFinite(qty)||!Number.isFinite(consumedEach)){ alert("Existe um valor inválido. Reveja os números introduzidos."); return; }
@@ -415,10 +415,10 @@ function renderSavings(){
   $("savTotal").textContent=count?`Resumo · ${count} produto${count===1?"":"s"}\n${balanceLines}${highlights}${extraItemsNote}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
   const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
   const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
-  if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Existe um valor financeiro inválido. Reveja os números introduzidos."; return; }
+  if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Há um valor que não está correto. Confirme os números."; return; }
   const calculatedTotal=mensal>0&&Number.isInteger(months)&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
-  if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Mensalidade, prazo e valor total não podem ser negativos."; return; }
-  if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
+  if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Os valores não podem ser negativos."; return; }
+  if(!mensal&&!total){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
   const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), accumulated=roiMonthly*months, remaining=Math.max(0,total-accumulated), breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
   const validMonths=Number.isInteger(months)&&months>0;
   const coverText=mensal?(roiMonthly>0?`A poupança cobre cerca de ${pct.toFixed(0)}% da mensalidade.`:`Nesta simulação não há poupança para abater à mensalidade.`):"";
@@ -439,7 +439,7 @@ function savingsText(){
   return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
 }
 async function copySavings(){
-  if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar a simulação."); return; }
+  if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar o resumo."); return; }
   const txt=savingsText();
   try{
     if(navigator.clipboard?.writeText) await navigator.clipboard.writeText(txt);
