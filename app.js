@@ -403,7 +403,7 @@ function newSavingsSimulation(){
     $("p_ref").innerHTML='<option value="">Não usar referência</option>';
     $("p_ref").value="";
   }
-  if($("p_ref_help")) $("p_ref_help").textContent="Escolha primeiro onde compra.";
+  if($("p_ref_help")) $("p_ref_help").textContent="Opcional: escolha uma loja apenas se quiser procurar um preço de referência.";
   sessionStorage.removeItem("tachinho_first_add_tip");
   persist();
   window.scrollTo({top:0,behavior:"smooth"});
