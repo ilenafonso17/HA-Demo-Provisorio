@@ -335,7 +335,7 @@ function addSaving(){
     }).join("\n");
     const restantes=Math.max(0,anteriores.length-3);
     const mais=restantes ? "\n• + "+restantes+" comparação"+(restantes===1?"":"ões")+" anterior"+(restantes===1?"":"es") : "";
-    if(!confirm(name+" já está nesta conta com outros dados:\n\n"+resumo+mais+"\n\nQuer adicionar esta também?")) return;
+    if(!confirm(name+" já está nesta simulação com outros dados:\n\n"+resumo+mais+"\n\nQuer adicionar esta também?")) return;
   }
   if(!canUseHomeCost(p)){ alert("Ainda estamos a confirmar quanto custa fazer este produto em casa. Por enquanto, não o vamos usar."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
@@ -360,12 +360,12 @@ function addSaving(){
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
   if(!item) return;
-  if(!confirm("Retirar "+(item.p||"este produto")+" desta conta?")) return;
+  if(!confirm("Retirar "+(item.p||"este produto")+" desta simulação?")) return;
   db.savings=db.savings.filter(x=>String(x.id)!==String(id));
   persist();
 }
 function newSavingsSimulation(){
-  if((db.savings||[]).length && !confirm("Começar uma nova conta? O resumo atual será limpo deste dispositivo.")) return;
+  if((db.savings||[]).length && !confirm("Começar uma nova simulação? O resumo atual será limpo deste dispositivo.")) return;
   db.savings=[];
   if($("sim_name")) $("sim_name").value="";
   if($("roi_monthly")) $("roi_monthly").value="";
@@ -427,7 +427,7 @@ function renderSavings(){
 }
 function savingsText(){
   const t=savingsTotals();
-  if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta conta.";
+  if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
   const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço sugerido":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
