@@ -287,6 +287,8 @@ function loadReferenceOptions(){
   if(refs.length){ $("p_ref").value="0"; applySelectedReference(); }
   else { $("p_ref").value=""; $("p_brand").value=""; $("p_price").value=""; }
 }
+// IMPORTANTE: daqui para a frente, simplificar apenas textos visíveis ao utilizador.
+ // Não alterar identificadores internos (priceSource, status, schemaVersion, chaves ou valores usados na lógica).
 function markManualPrice(){
   if($("p_ref")) $("p_ref").value="";
   if($("p_brand") && !$("p_brand").value.trim()) $("p_brand").placeholder="Opcional — pode indicar a marca da cliente";
