@@ -349,9 +349,11 @@ function addSaving(){
   }
   if(!canUseHomeCost(p)){ alert("Ainda estamos a confirmar quanto custa fazer este produto em casa. Por enquanto, não o vamos usar."); return; }
   if(price<=0 || pack<=0 || qty<=0){ alert("Preço, embalagem e quantidade têm de ser superiores a zero."); return; }
-  const consumed=consumedEach*qty, homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference), occ=yearlyOccurrences(period);
+  const consumed=consumedEach*qty;
+  if(!Number.isFinite(consumed) || consumed<=0){ alert("Indique uma quantidade que usa."); return; }
+  const homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference), occ=yearlyOccurrences(period);
   const confidence=calculationConfidence(p,priceSource);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
