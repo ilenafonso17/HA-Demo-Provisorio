@@ -40,39 +40,39 @@ function defaultPrices(){
     reviewAfter:"2026-12-20",
     references:{
       "Iogurte sólido":[
-        {store:"Continente",brand:"Continente Natural",price:1.39,pack:8,unit:"un",format:"8 × 125 g",note:"Confirmado no Continente Online em 20/09/2026: 1,39 € / 1000 g (8 un)."},
-        {store:"Continente",brand:"Mimosa Natural Super Poupança",price:1.89,pack:8,unit:"un",format:"8 × 120 g",note:"Confirmado no Continente Online em 20/09/2026: 1,89 € / 960 g (8 un)."},
-        {store:"Continente",brand:"Danone Natural",price:2.72,pack:8,unit:"un",format:"8 un / 960 g",promoPrice:2.09,priceType:"normal",note:"Continente Online 20/09/2026: PVPR/preço normal 2,72 €; campanha observada 2,09 €. A referência-base usa o preço normal."},
+        {store:"Continente",brand:"Continente Natural",price:1.39,pack:8,unit:"un",format:"8 × 125 g",note:"Confirmado no Continente Online em 20/09/2026: 1,39 € / 1000 g (8 un).",validation:"confirmada"},
+        {store:"Continente",brand:"Mimosa Natural Super Poupança",price:1.89,pack:8,unit:"un",format:"8 × 120 g",note:"Confirmado no Continente Online em 20/09/2026: 1,89 € / 960 g (8 un).",validation:"confirmada"},
+        {store:"Continente",brand:"Danone Natural",price:2.72,pack:8,unit:"un",format:"8 un / 960 g",promoPrice:2.09,priceType:"normal",note:"Continente Online 20/09/2026: PVPR/preço normal 2,72 €; campanha observada 2,09 €. A referência-base usa o preço normal.",validation:"confirmada"},
         {store:"Auchan",brand:"Auchan Natural Cremoso",price:1.09,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Bebida de soja":[
-        {store:"Continente",brand:"Continente",price:0.79,pack:1000,unit:"ml",format:"1 L",note:"Confirmado no Continente Online em 20/09/2026: 0,79 € / 1 L."},
+        {store:"Continente",brand:"Continente",price:0.79,pack:1000,unit:"ml",format:"1 L",note:"Confirmado no Continente Online em 20/09/2026: 0,79 € / 1 L.",validation:"confirmada"},
         {store:"Continente",brand:"Continente Bio",price:0.94,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
         {store:"Continente",brand:"Vive Soy",price:1.69,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
         {store:"Continente",brand:"Shoyce",price:1.59,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."}
       ],
       "Queijo fresco":[
-        {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:1,unit:"un",format:"1 un / 80 g",note:"Confirmado no Continente Online em 20/09/2026: 0,59 € / 80 g."},
-        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",promoPrice:2.28,priceType:"normal",note:"Continente Online 20/09/2026: preço normal 2,69 € / 3 × 72 g; campanha observada 2,28 €. A referência-base usa o preço normal."}
+        {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:1,unit:"un",format:"1 un / 80 g",note:"Confirmado no Continente Online em 20/09/2026: 0,59 € / 80 g.",validation:"confirmada"},
+        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",promoPrice:2.28,priceType:"normal",note:"Continente Online 20/09/2026: preço normal 2,69 € / 3 × 72 g; campanha observada 2,28 €. A referência-base usa o preço normal.",validation:"confirmada"}
       ],
       "Iogurte de soja":[
-        {store:"Auchan",brand:"Auchan",price:1.39,pack:4,unit:"un",format:"4 × 100 g",note:"Confirmado no Auchan Online em 20/09/2026: 1,39 € / 4 × 100 g."},
+        {store:"Auchan",brand:"Auchan",price:1.39,pack:4,unit:"un",format:"4 × 100 g",note:"Confirmado no Auchan Online em 20/09/2026: 1,39 € / 4 × 100 g.",validation:"confirmada"},
         {store:"Auchan",brand:"Sojasun",price:2.17,pack:400,unit:"g",format:"400 g",note:"Preço observado online em 20/09/2026."},
         {store:"Auchan",brand:"Alpro",price:2.49,pack:400,unit:"g",format:"400 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Manteiga de amendoim":[
-        {store:"Continente",brand:"Continente Equilíbrio",price:2.49,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+        {store:"Continente",brand:"Continente Equilíbrio",price:2.49,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ],
       "Maionese":[
-        {store:"Continente",brand:"Hellmann's",price:4.84,pack:416,unit:"g",format:"416 g",note:"Preço normal observado online em 20/09/2026; promoção não usada."}
+        {store:"Continente",brand:"Hellmann's",price:4.84,pack:416,unit:"g",format:"416 g",note:"Preço normal observado online em 20/09/2026; promoção não usada.",validation:"confirmada"}
       ],
       "Massa folhada":[
         {store:"Auchan",brand:"Auchan",price:1.20,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."},
         {store:"Auchan",brand:"Polegar",price:0.95,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Massa quebrada":[
-        {store:"Auchan",brand:"Auchan",price:1.19,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."},
-        {store:"Auchan",brand:"Pasta do Dia",price:2.09,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
+        {store:"Auchan",brand:"Auchan",price:1.19,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"},
+        {store:"Auchan",brand:"Pasta do Dia",price:2.09,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ],
       "Bechamel":[
         {store:"Continente",brand:"Continente",price:1.69,pack:500,unit:"ml",format:"500 ml",note:"Preço observado online em 20/09/2026."},
@@ -80,11 +80,11 @@ function defaultPrices(){
         {store:"Continente",brand:"Parmalat",price:2.38,pack:500,unit:"ml",format:"500 ml",note:"Preço observado online em 20/09/2026."}
       ],
       "Farinha de arroz":[
-        {store:"Continente",brand:"Espiga",price:1.32,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Continente",brand:"Espiga",price:1.32,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"},
         {store:"Continente",brand:"Continente Bio Integral",price:2.29,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Granola":[
-        {store:"Continente",brand:"Continente Triplo Chocolate",price:2.99,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+        {store:"Continente",brand:"Continente Triplo Chocolate",price:2.99,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ],
       "Iogurte líquido":[
         {store:"Continente",brand:"Continente Cremoso Morango",price:1.65,pack:1000,unit:"g",format:"1 kg",note:"Preço observado online em 20/09/2026; custo de fazer em casa ainda a confirmar."},
