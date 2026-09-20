@@ -503,34 +503,33 @@ function renderSavings(){
 function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não adicionou nenhum produto.";
+  const who=String($("sim_name")?.value||"").trim().slice(0,40);
   const lines=db.savings.map(raw=>{
     const x=normalizedSaving(raw);
-    const result=(Number(x.annual)||0)>0
-      ? `${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`
-      : Number(x.extraHomeCost)>0
-        ? `fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`
-        : "sem diferença nesta comparação";
-    return `${x.p}: ${result}`;
+    if((Number(x.annual)||0)>0) return "• "+x.p+": "+euro(x.monthly)+"/mês · "+euro(x.annual)+"/ano";
+    if(Number(x.extraHomeCost)>0) return "• "+x.p+": fazer em casa fica mais caro nesta comparação";
+    return "• "+x.p+": sem diferença nesta comparação";
   }).join("\n");
-  const who=String($("sim_name")?.value||"").trim().slice(0,40);
-  const netAnnual=normalizeMoneyZero(t.annual-(t.extraAnnual||0)), netMonthly=normalizeMoneyZero(t.monthly-(t.extraMonthly||0));
-  const netDay=netAnnual/365, netWeek=netAnnual/52;
-  const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
-  const saldoLabel=t.extraAnnual>0?"No total":"Poupa";
-  const equivalencia=netAnnual===0?"":`\nPor dia e por semana: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
+  const netAnnual=normalizeMoneyZero(t.annual-(t.extraAnnual||0));
+  const netMonthly=normalizeMoneyZero(t.monthly-(t.extraMonthly||0));
+  const totalLine=netAnnual>0
+    ? "Poupança estimada: "+euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano"
+    : netAnnual<0
+      ? "Nesta comparação, fazer em casa fica cerca de "+euro(Math.abs(netMonthly))+"/mês mais caro."
+      : "Nesta comparação, os custos ficam praticamente iguais.";
   let payment="";
   const mensal=parseNumber($("roi_monthly")?.value), months=parseNumber($("roi_months")?.value), typedTotal=parseNumber($("roi_total")?.value);
-  const safeMensal=Number.isFinite(mensal)&&mensal>=0?mensal:0;
+  const safeMensal=Number.isFinite(mensal)&&mensal>0?mensal:0;
   const safeMonths=Number.isInteger(months)&&months>0?months:0;
-  const safeTotal=Number.isFinite(typedTotal)&&typedTotal>=0?typedTotal:0;
+  const safeTotal=Number.isFinite(typedTotal)&&typedTotal>0?typedTotal:0;
   if(safeMensal>0 || safeTotal>0){
     const impact=calculatePaymentImpact({netMonthly,monthlyPayment:safeMensal,months:safeMonths,total:safeTotal});
-    const cover=safeMensal>0?(impact.saving>=safeMensal?"A poupança cobre 100% da mensalidade.":`A poupança ajuda a pagar cerca de ${impact.percent.toFixed(0)}% da mensalidade.`):"";
-    const monthly=safeMensal>0?(impact.surplusPerMonth>0?` Sobram ${euro(impact.surplusPerMonth)} por mês.`:impact.missingPerMonth>0?` Faltam ${euro(impact.missingPerMonth)} por mês.`:""):"";
-    const period=impact.months>0?`\nAo fim de ${impact.months} meses, a poupança acumulada é ${euro(impact.accumulated)}${impact.total>0?` e ficam por compensar ${euro(impact.remaining)}`:""}.`:"";
-    payment=`\n\nMensalidade\n${cover}${monthly}${period}`;
+    if(safeMensal>0){
+      payment="\n\nComparação mensal: a poupança estimada "+(impact.saving>=safeMensal?"pode compensar o valor mensal indicado.":"corresponde a cerca de "+impact.percent.toFixed(0)+"% do valor mensal indicado.");
+    }
+    if(impact.months>0) payment+="\nEm "+impact.months+" meses: "+euro(impact.accumulated)+" de poupança estimada acumulada.";
   }
-  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}${payment}\n\nEstes valores são uma estimativa. Podem mudar conforme os preços, as quantidades e a frequência de compra.`;
+  return "🥘 Tachinho — Comprar ou fazer?"+(who?" · "+who:"")+"\n\n"+lines+"\n\n"+totalLine+payment+"\n\nEstimativa baseada nos preços, quantidades e frequência indicados.";
 }
 async function copySavings(){
   if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar o resumo."); return; }
