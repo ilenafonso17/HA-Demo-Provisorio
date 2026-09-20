@@ -112,7 +112,13 @@ function loadDB(){
     const raw = localStorage.getItem(KEY);
     if(raw){
       const data=JSON.parse(raw);
-      if(!data.prices || !data.prices.references) data.prices=defaultPrices();
+      if(!data.prices || !data.prices.references){
+        if(data.prices) data.legacyPricesBackup={savedAt:new Date().toISOString(),data:data.prices};
+        data.prices=defaultPrices();
+      }
+      data.clients=data.clients||[];
+      data.savings=data.savings||[];
+      data.recruits=data.recruits||[];
       return data;
     }
   }catch(e){}
