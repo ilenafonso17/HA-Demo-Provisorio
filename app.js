@@ -299,6 +299,13 @@ function runMathSelfTests(){
   }
   if(!Number.isNaN(parseNumber(""))) failures.push("campo vazio");
   if(!Number.isNaN(parseNumber("abc"))) failures.push("texto inválido");
+  const mixedTotals=savingsTotals([
+    {monthly:10,annual:120,extraMonthly:0,extraAnnual:0},
+    {monthly:0,annual:0,extraMonthly:2,extraAnnual:24}
+  ]);
+  if(!nearlyEqual(mixedTotals.monthly-mixedTotals.extraMonthly,8) || !nearlyEqual(mixedTotals.annual-mixedTotals.extraAnnual,96)) failures.push("total misto poupança + custo extra");
+  const mixedImpact=calculatePaymentImpact({netMonthly:mixedTotals.monthly-mixedTotals.extraMonthly,monthlyPayment:20,months:12,total:240});
+  if(!nearlyEqual(mixedImpact.percent,40) || !nearlyEqual(mixedImpact.accumulated,96)) failures.push("mensalidade com total misto");
   const paymentCases=[
     ["mensalidade parcial",{netMonthly:30,monthlyPayment:50,months:12,total:600},{percent:60,missingPerMonth:20,surplusPerMonth:0,accumulated:360,remaining:240,breakEvenMonths:20}],
     ["mensalidade 100%",{netMonthly:50,monthlyPayment:50,months:12,total:600},{percent:100,missingPerMonth:0,surplusPerMonth:0,accumulated:600,remaining:0,breakEvenMonths:12}],
@@ -438,16 +445,18 @@ function simpleConfidenceLabel(x){
   return legacy || "—";
 }
 function normalizedSaving(x){
-  if(Number.isFinite(Number(x.monthly))&&Number.isFinite(Number(x.annual))) return x;
-  const w=Number(x.saveWeek)||0;
-  return {...x,monthly:w*52/12,annual:w*52};
+  const annual=Number.isFinite(Number(x.annual))?Number(x.annual):(Number(x.saveWeek)||0)*52;
+  const monthly=Number.isFinite(Number(x.monthly))?Number(x.monthly):annual/12;
+  const extraAnnual=Number.isFinite(Number(x.extraAnnual))?Number(x.extraAnnual):(Number(x.extraHomeCost)||0);
+  const extraMonthly=Number.isFinite(Number(x.extraMonthly))?Number(x.extraMonthly):extraAnnual/12;
+  return {...x,monthly,annual,extraMonthly,extraAnnual};
 }
-function savingsTotals(){
-  return db.savings.map(normalizedSaving).reduce((a,x)=>({
+function savingsTotals(items=db.savings||[]){
+  return items.map(normalizedSaving).reduce((a,x)=>({
     monthly:a.monthly+(Number(x.monthly)||0),
     annual:a.annual+(Number(x.annual)||0),
-    extraMonthly:a.extraMonthly+(Number(x.extraHomeCost)||0)/12,
-    extraAnnual:a.extraAnnual+(Number(x.extraHomeCost)||0)
+    extraMonthly:a.extraMonthly+(Number(x.extraMonthly)||0),
+    extraAnnual:a.extraAnnual+(Number(x.extraAnnual)||0)
   }),{monthly:0,annual:0,extraMonthly:0,extraAnnual:0});
 }
 function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=>(b.annual||0)-(a.annual||0)); }
