@@ -307,8 +307,8 @@ function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?1
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
-  if(p.status==="validado" && priceSource==="indicado") return {level:"alta",label:"🟢 Confirmado · custo caseiro validado + preço real"};
-  if(p.status==="validado" && priceSource==="sugerido") return {level:"boa",label:"🟢 Bom valor de sugerido · custo caseiro validado + preço sugerido"};
+  if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado · custo caseiro validado + preço real"};
+  if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Bom valor de sugerido · custo caseiro validado + preço sugerido"};
   return {level:"provisoria",label:"🟡 Ainda a confirmar · custo por receita ainda a validar"};
 }
 function validationState(p){
@@ -346,7 +346,7 @@ function addSaving(){
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=consumedEach*qty, homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference), occ=yearlyOccurrences(period);
   const confidence=calculationConfidence(p,priceSource);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="sugerido"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
@@ -398,7 +398,7 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Segurança do valor</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="indicado"?"Preço que paga":x.priceSource==="sugerido"?"Preço que encontrámos":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Segurança do valor</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço que encontrámos":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(x.confidence||"—")}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
   const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
   const day=netAnnual/365, week=netAnnual/52;
@@ -428,7 +428,7 @@ function renderSavings(){
 function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
-  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="indicado"?"preço que paga":x.priceSource==="sugerido"?"preço sugerido":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
+  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço sugerido":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
   const netDay=netAnnual/365, netWeek=netAnnual/52;
