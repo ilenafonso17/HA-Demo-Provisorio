@@ -137,8 +137,8 @@ if(tachinhoStandalone){
     <div class="card">
       <h3>💳 E na mensalidade?</h3>
       <div class="grid3">
-        <div><label>Mensalidade</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: 39,50" oninput="renderSavings()"></div>
-        <div><label>Durante quantos meses?</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"></div>
+        <div><label>Mensalidade que quer comparar</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: mensalidade mínima ou outra" oninput="renderSavings()"><div class="small">Pode colocar a mensalidade mínima do financiamento ou qualquer outro valor mensal.</div></div>
+        <div><label>Durante quantos meses? (se quiser)</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"><div class="small">Só é necessário se quiser ver a poupança acumulada ao longo do financiamento.</div></div>
         <div><label>Valor total (se souber)</label><input id="roi_total" inputmode="decimal" placeholder="Opcional" oninput="renderSavings()"></div>
       </div>
       <div id="roiResult" class="result"></div>
