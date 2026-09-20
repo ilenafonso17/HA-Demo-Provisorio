@@ -38,7 +38,7 @@ const PRODUCTS = {
   "Massa folhada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"referência a validar", periods:["semana","mês","2 meses","3 meses"]},
   "Farinha de arroz": {home:0.23, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
-  "Iogurte líquido": {home:null, yield:null, unit:"ml", label:"a validar", status:"a validar", periods:["dia","semana","mês"]},
+  "Iogurte líquido": {home:1.05, yield:1000, unit:"ml", label:"aprox. 1 L", status:"calculado por receita — a validar", source:"Base Cookidoo para iogurte líquido; leite meio-gordo + fermento/iogurte de arranque. Valor conservador provisório, a afinar por receita/sabor e rendimento final.", periods:["dia","semana","mês"]},
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
   "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão de água com massa-mãe (620 g); cálculo mínimo com 650 g farinha T65 a 0,69 €/kg; água/sal/azeite residual e manutenção da massa-mãe devem ser afinados", periods:["semana","mês"]},
   "Pão de Mafra": {home:0.43, yield:650, unit:"g", label:"650 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g): 550 g farinha T65 + 50 g farinha de centeio + 50 g isco; base mínima calculada com T65 a 0,69 €/kg, restante custo a afinar", periods:["semana","mês"]},
