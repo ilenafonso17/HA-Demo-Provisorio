@@ -421,9 +421,9 @@ function renderSavings(){
   if(!mensal&&!total){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
   const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), accumulated=roiMonthly*months, remaining=Math.max(0,total-accumulated), breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
   const validMonths=Number.isInteger(months)&&months>0;
-  const coverText=mensal?(roiMonthly>0?`A poupança cobre cerca de ${pct.toFixed(0)}% da mensalidade.`:`Nesta simulação não há poupança para abater à mensalidade.`):"";
-  const periodText=validMonths?`\nPoupança acumulada em ${months} meses: ${euro(accumulated)}\nFica por compensar no fim: ${euro(remaining)}`:"\nDiga durante quantos meses quer fazer a conta.";
-  $("roiResult").textContent=`${coverText}${mensal?"\nFalta pagar por mês: "+euro(felt):""}${periodText}${breakEven?"\nAo fim de cerca de "+breakEven.toFixed(1)+" meses atinge o valor total.":""}`;
+  const coverText=mensal?(roiMonthly>0?`A poupança ajuda a pagar cerca de ${pct.toFixed(0)}% da mensalidade.`:`Aqui não há poupança para ajudar a pagar a mensalidade.`):"";
+  const periodText=validMonths?`\nAo fim de ${months} meses: ${euro(accumulated)}\nNo fim, ficam por compensar ${euro(remaining)}`:"\nDiga durante quantos meses quer fazer a conta.";
+  $("roiResult").textContent=`${coverText}${mensal?"\nDepois da poupança, faltam "+euro(felt):""}${periodText}${breakEven?"\nAo fim de cerca de "+breakEven.toFixed(1)+" meses atinge o valor total.":""}`;
 }
 function savingsText(){
   const t=savingsTotals();
