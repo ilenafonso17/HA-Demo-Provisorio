@@ -97,9 +97,10 @@
       <p class="pill">Supermercado × Feito em casa</p>
       <div class="grid3">
         <div><label>Produto</label><select id="p_prod" onchange="loadFormats()"></select></div>
-        <div><label>Supermercado / origem</label><select id="p_store"><option>Continente</option><option>Pingo Doce</option><option>Lidl</option><option>Aldi</option><option>Auchan</option><option>Mercadona</option><option>Intermarché</option><option>Outro</option></select></div>
+        <div><label>Supermercado / origem</label><select id="p_store" onchange="loadReferenceOptions()"><option>Continente</option><option>Pingo Doce</option><option>Lidl</option><option>Aldi</option><option>Auchan</option><option>Mercadona</option><option>Intermarché</option><option>Pizzaria</option><option>Outro</option></select></div>
+        <div><label>Referência disponível</label><select id="p_ref" onchange="applySelectedReference()"><option value="">Preço manual</option></select></div>
         <div><label>Marca (opcional)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
-        <div><label>Preço pago (€)</label><input id="p_price" inputmode="decimal" placeholder="Ex.: 3,20"></div>
+        <div><label>Preço da cliente / preço pago (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode substituir a referência"></div>
         <div><label>Quantidade da embalagem</label><input id="p_packqty" inputmode="decimal" value="1"></div>
         <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select></div>
         <div><label>Quantas embalagens/vez?</label><input id="p_qty" type="number" min="0.1" step="0.1" value="1"></div>
