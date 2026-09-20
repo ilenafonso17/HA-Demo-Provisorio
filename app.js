@@ -123,7 +123,12 @@ function escapeHTML(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&
 
 /* POUPANÇA — TACHINHO */
 function initSavings(){
-  $("p_prod").innerHTML = Object.keys(PRODUCTS).sort((a,b)=>a.localeCompare(b,"pt",{sensitivity:"base"})).map(p=>`<option>${p}</option>`).join("");
+  const names=Object.keys(PRODUCTS).sort((a,b)=>a.localeCompare(b,"pt",{sensitivity:"base"}));
+  const ready=names.filter(name=>canUseHomeCost(PRODUCTS[name]));
+  const pending=names.filter(name=>!canUseHomeCost(PRODUCTS[name]));
+  $("p_prod").innerHTML =
+    '<optgroup label="Disponíveis para calcular">'+ready.map(name=>`<option value="${escapeHTML(name)}">${escapeHTML(name)}</option>`).join("")+'</optgroup>'+
+    (pending.length?'<optgroup label="Em validação — ainda não entram na conta">'+pending.map(name=>`<option value="${escapeHTML(name)}">${escapeHTML(name)} · em validação</option>`).join("")+'</optgroup>':"");
   loadFormats();
 }
 function loadFormats(){
