@@ -1,6 +1,6 @@
 {
-  "name": "Smart Pro Agente",
-  "short_name": "Smart Pro Agente",
+  "name": "Tachinho — Comprar ou fazer?",
+  "short_name": "Tachinho",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#eef8f1",
