@@ -14,13 +14,14 @@
 .tachinho-only{display:none}.tachinho-mode .tachinho-only{display:block;text-align:center;margin:18px 0 22px}.tachinho-mode .tachinho-inside-title{display:none}
 </style>
 </head>
-<body>
+<body class="tachinho-mode">
 <script>
-const tachinhoStandalone=new URLSearchParams(location.search).get("tachinho")==="1";
-if(tachinhoStandalone){
-  document.documentElement.classList.add("tachinho-mode");
-  document.title="Tachinho — Comprar ou fazer?";
-}
+// Neste ramo o Tachinho funciona sempre isolado do Smart Pro.
+// As restantes áreas continuam no código apenas enquanto decorre a separação técnica,
+// mas nunca são apresentadas ao utilizador.
+const tachinhoStandalone = true;
+document.documentElement.classList.add("tachinho-mode");
+document.title="Tachinho — Comprar ou fazer?";
 </script>
 <div class="app">
   <div class="hero smartpro-hero">
