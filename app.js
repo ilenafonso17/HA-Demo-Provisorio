@@ -337,7 +337,6 @@ function addSaving(){
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
-  if($("p_prod")){ const opts=$("p_prod").options; if(opts.length>1){ $("p_prod").selectedIndex=($("p_prod").selectedIndex+1)%opts.length; if($("p_prod").selectedIndex===0) $("p_prod").selectedIndex=1; loadProduct(); } }
   if($("p_price")) $("p_price").focus();
 }
 function removeSaving(id){
