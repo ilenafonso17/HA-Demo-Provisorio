@@ -322,6 +322,8 @@ function addSaving(){
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
+  if(price<=0 || pack<=0 || qty<=0){ alert("Preço, embalagem e quantidade têm de ser superiores a zero."); return; }
+  if(!Number.isFinite(price)||!Number.isFinite(pack)||!Number.isFinite(qty)||!Number.isFinite(consumedEach)){ alert("Existe um valor inválido. Reveja os números introduzidos."); return; }
   if(consumedEach>pack){ alert("O consumo por embalagem não pode ser superior à quantidade da embalagem."); return; }
   if(consumedEach<=0){ alert("Indique uma quantidade consumida válida."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
