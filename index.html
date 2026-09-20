@@ -8,10 +8,14 @@
 <link rel="icon" href="icon-192.png">
 <title>Smart Pro Agente</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.tachinho-mode .smartpro-hero,.tachinho-mode .section:not(.tachinho-section){display:none!important}.tachinho-mode .tachinho-section{display:block!important}
+</style>
 </head>
 <body>
+<script>if(new URLSearchParams(location.search).get("tachinho")==="1") document.documentElement.classList.add("tachinho-mode");</script>
 <div class="app">
-  <div class="hero">
+  <div class="hero smartpro-hero">
     <h1>🌿 Smart Pro Agente</h1>
     <p>Gestão Inteligente de Clientes e Demonstrações</p>
     <div class="nav" id="nav"></div>
@@ -90,7 +94,7 @@
     </div>
   </div>
 
-  <div id="savings" class="section">
+  <div id="savings" class="section tachinho-section">
     <h2>🥘 Tachinho</h2>
     <p class="small">Comprar ou fazer? Descobre quanto podes poupar.</p>
     <div class="card">
