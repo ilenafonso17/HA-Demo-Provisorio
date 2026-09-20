@@ -385,6 +385,15 @@ function addSaving(){
   if($("p_consumed")) $("p_consumed").value="";\n  if($("p_use_all")) $("p_use_all").value="yes";\n  togglePartialUse();
   if($("p_qty")) $("p_qty").value="1";
 }
+function addAnotherProduct(){
+  if($("p_prod")) $("p_prod").focus();
+  const card=$("p_prod")?.closest(".card");
+  if(card) card.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function finishSavings(){
+  const target=$("roi_monthly")?.closest(".card") || $("savHeadline");
+  if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
+}
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
   if(!item) return;
@@ -443,6 +452,7 @@ function savingsTotals(){
 }
 function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=>(b.annual||0)-(a.annual||0)); }
 function renderSavings(){
+  if($("sav_next")) $("sav_next").hidden=!(db.savings||[]).length;
   if(!$("savList")) return;
   db.savings=db.savings||[];
   $("savList").innerHTML = '<div class="savings-cards">'+db.savings.map(raw=>{
