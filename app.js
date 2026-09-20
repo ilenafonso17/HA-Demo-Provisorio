@@ -325,7 +325,8 @@ function renderSavings(){
 }
 function savingsText(){
   const t=savingsTotals();
-  return `Tachinho — Comprar ou fazer?\n\n${db.savings.map(raw=>{const x=normalizedSaving(raw);return `${x.p}: ${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`}).join("\n")}\n\nPoupança estimada:\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}`;
+  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço indicado":x.priceSource==="referência"?"preço de referência":"preço registado";return `${x.p}: ${euro(x.monthly)}/mês · ${euro(x.annual)}/ano (${src})`;}).join("\n");
+  return `Tachinho — Comprar ou fazer?\n\n${lines}\n\nPoupança estimada com os hábitos indicados:\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
 }
 function copySavings(){ navigator.clipboard.writeText(savingsText()); alert("Resumo copiado."); }
 function whatsappSavings(){ window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText()); }
