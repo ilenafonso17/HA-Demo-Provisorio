@@ -82,7 +82,24 @@ function defaultPrices(){
         {store:"Auchan",brand:"Polegar",price:0.95,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Massa quebrada":[
-        {store:"Auchan",brand:"Auchan",price:1.19,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
+        {store:"Auchan",brand:"Auchan",price:1.19,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Auchan",brand:"Pasta do Dia",price:2.09,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Bechamel":[
+        {store:"Continente",brand:"Continente",price:1.69,pack:500,unit:"ml",format:"500 ml",note:"Preço observado online em 20/09/2026."},
+        {store:"Continente",brand:"Mimosa",price:1.99,pack:500,unit:"ml",format:"500 ml",note:"Preço observado online em 20/09/2026."},
+        {store:"Continente",brand:"Parmalat",price:2.38,pack:500,unit:"ml",format:"500 ml",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Farinha de arroz":[
+        {store:"Continente",brand:"Espiga",price:1.32,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Continente",brand:"Continente Bio Integral",price:2.29,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Granola":[
+        {store:"Continente",brand:"Continente Triplo Chocolate",price:2.99,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Iogurte líquido":[
+        {store:"Continente",brand:"Continente Cremoso Morango",price:1.65,pack:1000,unit:"g",format:"1 kg",note:"Preço observado online em 20/09/2026; custo caseiro ainda a validar."},
+        {store:"Continente",brand:"Continente Cremoso Morango",price:1.35,pack:640,unit:"g",format:"4 × 160 g",note:"Preço observado online em 20/09/2026; custo caseiro ainda a validar."}
       ]
     }
   };
@@ -241,15 +258,22 @@ function loadFormats(){
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+".":" Introduza o preço que a pessoa paga.");
-  applyReferencePrice();
+  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  loadReferenceOptions();
 }
-function applyReferencePrice(){
-  const name=$("p_prod").value, refs=db.prices?.references?.[name]||[];
-  if(!refs.length) return;
-  const store=$("p_store").value;
-  const r=refs.find(x=>x.store===store)||refs[0];
-  $("p_store").value=r.store;
+function loadReferenceOptions(){
+  const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
+  const refs=all.filter(x=>x.store===store);
+  $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
+  if(refs.length){ $("p_ref").value="0"; applySelectedReference(); }
+  else { $("p_ref").value=""; $("p_brand").value=""; $("p_price").value=""; }
+}
+function applySelectedReference(){
+  const name=$("p_prod").value, store=$("p_store").value, refs=(db.prices?.references?.[name]||[]).filter(x=>x.store===store);
+  const idx=$("p_ref").value;
+  if(idx==="") return;
+  const r=refs[Number(idx)];
+  if(!r) return;
   $("p_brand").value=r.brand||"";
   $("p_price").value=r.price;
   $("p_packqty").value=r.pack;
