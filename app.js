@@ -281,18 +281,19 @@ function applySelectedReference(){
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
-function compatibleUnit(productUnit, chosen){ return productUnit===chosen || (productUnit==="g" && chosen==="ml") || (productUnit==="ml" && chosen==="g"); }
+function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function canUseHomeCost(p){ return p.home!=null && !String(p.status||"").includes("não usar"); }
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
-  const selectedRef=$("p_ref") && $("p_ref").value!=="" ? $("p_ref").options[$("p_ref").selectedIndex]?.text : "";
-  const refPrice=selectedRef ? num((selectedRef.match(/([0-9]+[,.][0-9]+)\s*€/ )||[])[1]) : 0;
-  const priceSource=selectedRef && Math.abs(price-refPrice)<0.001 ? "referência" : "cliente/manual";
+  const refIdx=$("p_ref") ? $("p_ref").value : "";
+  const matchingRefs=(db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value);
+  const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
+  const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=pack*qty, homeCost=(consumed/p.yield)*p.home, marketCost=price*qty, saving=Math.max(0,marketCost-homeCost), occ=yearlyOccurrences(period);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,referenceUpdatedAt:db.prices?.updatedAt||"",pack,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
   persist();
 }
 function removeSaving(id){ db.savings=db.savings.filter(x=>String(x.id)!==String(id)); persist(); }
