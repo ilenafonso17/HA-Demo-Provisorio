@@ -304,6 +304,15 @@ function addSaving(){
   persist();
 }
 function removeSaving(id){ db.savings=db.savings.filter(x=>String(x.id)!==String(id)); persist(); }
+function newSavingsSimulation(){
+  if((db.savings||[]).length && !confirm("Começar uma nova simulação? O resumo atual será limpo deste dispositivo.")) return;
+  db.savings=[];
+  if($("roi_monthly")) $("roi_monthly").value="";
+  if($("roi_months")) $("roi_months").value="";
+  if($("roi_total")) $("roi_total").value="";
+  persist();
+  show("savings");
+}
 function normalizedSaving(x){
   if(Number.isFinite(Number(x.monthly))&&Number.isFinite(Number(x.annual))) return x;
   const w=Number(x.saveWeek)||0;
