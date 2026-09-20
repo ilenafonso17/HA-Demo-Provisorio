@@ -156,6 +156,8 @@ function loadFormats(){
   const usable=canUseHomeCost(p);
   $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");\n  if($("p_period_help")) $("p_period_help").textContent="Ex.: se indicou 2 embalagens e escolher “1 vez por semana”, o Tachinho considera essas 2 embalagens por semana.";
   $("p_unit").value = p.unit;\n  $("p_unit").disabled = false;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(p.unit);\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
+  if($("p_pack_label")) $("p_pack_label").textContent=p.unit==="g"?"Quantos g traz 1 embalagem?":p.unit==="ml"?"Quantos ml traz 1 embalagem?":"Quantas unidades traz 1 embalagem?";
+  if($("p_pack_help")) $("p_pack_help").textContent=p.unit==="g"?"Ex.: embalagem de 500 g → escreva 500.":p.unit==="ml"?"Ex.: embalagem de 1 L → escreva 1000 ml.":"Ex.: pack com 8 iogurtes → escreva 8.";
   $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
   const addBtn=document.querySelector('button[onclick="addSaving()"]');
   if(addBtn){ addBtn.disabled=!usable; addBtn.title=usable?"":"Este produto ainda não tem o custo de fazer em casa validado."; }
