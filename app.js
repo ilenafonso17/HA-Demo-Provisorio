@@ -369,7 +369,9 @@ function renderSavings(){
   const count=(db.savings||[]).length;
   const top=topSavings().slice(0,3);
   const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
-  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${highlights}`:"Ainda não adicionou produtos a esta simulação.";
+  const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0);
+  const noSaving=zeroItems.length?"\n\nSem poupança nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
+  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${highlights}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
   const mensal=num($("roi_monthly")?.value), months=num($("roi_months")?.value), typedTotal=num($("roi_total")?.value), total=typedTotal||(mensal*months);
   if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
   const pct=mensal?Math.min(999,(t.monthly/mensal)*100):0, felt=Math.max(0,mensal-t.monthly), accumulated=t.monthly*months, remaining=Math.max(0,total-accumulated), breakEven=t.monthly>0&&total>0?total/t.monthly:0;
