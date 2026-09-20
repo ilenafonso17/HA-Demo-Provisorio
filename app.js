@@ -329,7 +329,13 @@ function addSaving(){
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
   persist();
 }
-function removeSaving(id){ db.savings=db.savings.filter(x=>String(x.id)!==String(id)); persist(); }
+function removeSaving(id){
+  const item=(db.savings||[]).find(x=>String(x.id)===String(id));
+  if(!item) return;
+  if(!confirm("Apagar "+(item.p||"este produto")+" desta simulação?")) return;
+  db.savings=db.savings.filter(x=>String(x.id)!==String(id));
+  persist();
+}
 function newSavingsSimulation(){
   if((db.savings||[]).length && !confirm("Começar uma nova simulação? O resumo atual será limpo deste dispositivo.")) return;
   db.savings=[];
