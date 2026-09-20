@@ -111,7 +111,13 @@ function loadDB(){
 }
 function persist(){ db.schemaVersion=2; db.lastSavedAt=new Date().toISOString(); localStorage.setItem(KEY, JSON.stringify(db)); renderAll(); }
 function euro(n){ return (Number(n)||0).toLocaleString("pt-PT",{style:"currency",currency:"EUR"}); }
-function num(v){ return Number(String(v||"").replace(",", ".")) || 0; }
+function parseNumber(v){
+  const raw=String(v??"").trim().replace(/\s/g,"").replace(",",".");
+  if(raw==="") return NaN;
+  const n=Number(raw);
+  return Number.isFinite(n)?n:NaN;
+}
+function num(v){ const n=parseNumber(v); return Number.isFinite(n)?n:0; }
 function $(id){ return document.getElementById(id); }
 function escapeHTML(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
@@ -183,9 +189,9 @@ function validationState(p){
 }
 function canUseHomeCost(p){ return validationState(p)==="validated"; }
 function addSaving(){
-  const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
+  const name=$("p_prod").value, p=PRODUCTS[name], price=parseNumber($("p_price").value), pack=parseNumber($("p_packqty").value), qty=parseNumber($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
   const partialRaw=String($("p_consumed")?.value||"").trim();
-  const consumedEach=partialRaw==="" ? pack : num(partialRaw);
+  const consumedEach=partialRaw==="" ? pack : parseNumber(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
