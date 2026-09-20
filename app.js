@@ -324,7 +324,7 @@ function addSaving(){
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
-  const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && Number(x.qty)===qty && x.period===period && Number(x.consumedEach||x.pack)===Number(consumedEach));
+  const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && x.unit===$("p_unit").value && Number(x.qty)===qty && x.period===period && Number(x.consumedEach||x.pack)===Number(consumedEach));
   if(duplicate){
     if(!confirm("Esta comparação de "+name+" já parece estar adicionada. Quer duplicá-la mesmo assim?")) return;
   }else if((db.savings||[]).some(x=>x.p===name)){
