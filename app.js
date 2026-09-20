@@ -683,8 +683,14 @@ async function copySavings(){
     const area=document.createElement("textarea");
     area.value=txt; area.setAttribute("readonly",""); area.style.position="fixed"; area.style.opacity="0";
     document.body.appendChild(area); area.select();
-    const ok=document.execCommand("copy"); document.body.removeChild(area);
-    alert(ok?"Resumo copiado. Já pode colar onde quiser.":"Não foi possível copiar automaticamente. Pode selecionar e copiar o resumo manualmente.");
+    let ok=false;
+    try{ ok=document.execCommand("copy"); }catch(_){}
+    document.body.removeChild(area);
+    if(ok){
+      alert("Resumo copiado. Já pode colar onde quiser.");
+    }else{
+      window.prompt("Não foi possível copiar automaticamente. Selecione e copie este resumo:",txt);
+    }
   }
 }
 function whatsappSavings(){
