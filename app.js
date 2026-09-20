@@ -368,7 +368,12 @@ function normalizedSaving(x){
   return {...x,monthly:w*52/12,annual:w*52};
 }
 function savingsTotals(){
-  return db.savings.map(normalizedSaving).reduce((a,x)=>({monthly:a.monthly+(Number(x.monthly)||0),annual:a.annual+(Number(x.annual)||0)}),{monthly:0,annual:0});
+  return db.savings.map(normalizedSaving).reduce((a,x)=>({
+    monthly:a.monthly+(Number(x.monthly)||0),
+    annual:a.annual+(Number(x.annual)||0),
+    extraMonthly:a.extraMonthly+(Number(x.extraHomeCost)||0)/12,
+    extraAnnual:a.extraAnnual+(Number(x.extraHomeCost)||0)
+  }),{monthly:0,annual:0,extraMonthly:0,extraAnnual:0});
 }
 function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=>(b.annual||0)-(a.annual||0)); }
 function renderSavings(){
@@ -383,7 +388,8 @@ function renderSavings(){
   const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
   const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0);
   const noSaving=zeroItems.length?"\n\nSem poupança nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
-  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${highlights}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
+  const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano":"";
+  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${extra}${highlights}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
   const mensal=num($("roi_monthly")?.value), months=num($("roi_months")?.value), typedTotal=num($("roi_total")?.value), total=typedTotal||(mensal*months);
   if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
   const pct=mensal?(t.monthly/mensal)*100:0, felt=Math.max(0,mensal-t.monthly), accumulated=t.monthly*months, remaining=Math.max(0,total-accumulated), breakEven=t.monthly>0&&total>0?total/t.monthly:0;
