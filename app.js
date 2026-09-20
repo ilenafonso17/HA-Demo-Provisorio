@@ -283,6 +283,12 @@ function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez po
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function canUseHomeCost(p){ return p.home!=null && !String(p.status||"").includes("não usar"); }
+function calculationConfidence(p, priceSource){
+  if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não utilizar"};
+  if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Alta · custo caseiro validado + preço real"};
+  if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Boa · custo caseiro validado + preço de referência"};
+  return {level:"provisoria",label:"🟡 Provisória · custo por receita ainda a validar"};
+}
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
   const refIdx=$("p_ref") ? $("p_ref").value : "";
@@ -293,7 +299,8 @@ function addSaving(){
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=pack*qty, homeCost=(consumed/p.yield)*p.home, marketCost=price*qty, saving=Math.max(0,marketCost-homeCost), occ=yearlyOccurrences(period);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
+  const confidence=calculationConfidence(p,priceSource);
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
   persist();
 }
 function removeSaving(id){ db.savings=db.savings.filter(x=>String(x.id)!==String(id)); persist(); }
