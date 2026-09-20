@@ -414,6 +414,7 @@ function savingsText(){
   return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\nPoupança estimada com os hábitos indicados:\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${balance}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
 }
 async function copySavings(){
+  if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar a simulação."); return; }
   const txt=savingsText();
   try{
     if(navigator.clipboard?.writeText) await navigator.clipboard.writeText(txt);
