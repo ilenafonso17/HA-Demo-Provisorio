@@ -367,7 +367,8 @@ function renderSavings(){
   const t=savingsTotals();
   const day=t.annual/365, week=t.annual/52;
   const count=(db.savings||[]).length;
-  const top=topSavings().slice(0,3);
+  const positiveItems=topSavings().filter(x=>(Number(x.annual)||0)>0);
+  const top=positiveItems.slice(0,3);
   const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
   const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0);
   const noSaving=zeroItems.length?"\n\nSem poupança nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
