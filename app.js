@@ -207,7 +207,7 @@ function addSaving(){
     const anteriores=(db.savings||[]).filter(x=>x.p===name);
     const resumo=anteriores.slice(0,3).map(x=>{
       const origem=[x.store,x.brand].filter(Boolean).join(" · ")||"sem origem/marca";
-      return "• "+origem+" · "+money(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"")+" · usa "+(Number(x.qty)||0)+" embalagem(ns)";
+      return "• "+origem+" · "+euro(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"")+" · usa "+(Number(x.qty)||0)+" embalagem(ns)";
     }).join("\n");
     const restantes=Math.max(0,anteriores.length-3);
     const mais=restantes ? "\n• + "+restantes+" comparação"+(restantes===1?"":"ões")+" anterior"+(restantes===1?"":"es") : "";
