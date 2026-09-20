@@ -51,7 +51,9 @@ function defaultPrices(){
     reviewAfter:"2026-12-20",
     references:{
       "Iogurte sólido":[
-        {store:"Continente",brand:"Danone Natural",price:2.09,pack:8,unit:"un",format:"8 un / 960 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Continente",brand:"Continente Natural",price:1.39,pack:1000,unit:"g",format:"8 × 125 g",note:"Preço normal observado online em 20/09/2026."},
+        {store:"Continente",brand:"Mimosa Natural Super Poupança",price:1.89,pack:960,unit:"g",format:"8 × 120 g",note:"Preço normal observado online em 20/09/2026."},
+        {store:"Continente",brand:"Danone Natural",price:2.09,pack:960,unit:"g",format:"8 un / 960 g",note:"Preço observado online em 20/09/2026; PVPR indicado 2,72 €."},
         {store:"Auchan",brand:"Auchan Natural Cremoso",price:1.09,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Bebida de soja":[
