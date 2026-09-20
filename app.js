@@ -27,7 +27,7 @@ const PRODUCTS = {
   "Massa folhada": {home:0.71, yield:230, unit:"g", label:"230 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Farinha de arroz": {home:0.23, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
-  "Iogurte líquido": {home:1.89, yield:1000, unit:"ml", label:"aprox. 1 L", status:"validado", source:"Base Cookidoo para iogurte líquido; leite meio-gordo + fermento/iogurte de arranque. Valor conservador provisório, a afinar por receita/sabor e rendimento final.", periods:["dia","semana","mês"]},
+  "Iogurte líquido": {home:1.89, yield:1000, unit:"g", label:"1000 g", status:"validado", source:"Receita-base fornecida: rendimento 1000 g. Comparação mantida em gramas para não assumir equivalência g↔ml.", periods:["dia","semana","mês"]},
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"aproveitamento · rendimento por validar", source:"Não usar no cálculo até existir receita-base de produção e rendimento verificáveis.", periods:["semana","mês"]},
   "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"validado", source:"Cookidoo · Pão de água com massa-mãe (620 g). Custo recorrente validado: 650 g farinha T65 + 5 g sal; água sem custo de supermercado; massa-mãe tratada como cultura mantida/reutilizável; q.b. não quantificado.", periods:["semana","mês"]},
   "Pão de Mafra": {home:0.45, yield:650, unit:"g", label:"650 g", status:"validado", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g). Custo recorrente: 550 g farinha T65 + 50 g farinha de centeio + 10 g sal; água sem custo de supermercado; isco tratado como cultura mantida/reutilizável; azeite e farinha q.b. não quantificados.", periods:["semana","mês"]},
@@ -95,8 +95,8 @@ function defaultPrices(){
         {store:"Auchan",brand:"Pão Alentejano de Cabrela",price:2.46,pack:800,unit:"g",format:"800 g",note:"Referência comercial de fermentação longa com levedura natural/massa-mãe observada em 20/09/2026.",validation:"confirmada"}
       ],
       "Iogurte líquido":[
-        {store:"Continente",brand:"Continente Cremoso Morango",price:1.65,pack:1000,unit:"g",format:"1 kg",note:"Preço observado online em 20/09/2026; custo de fazer em casa ainda a confirmar."},
-        {store:"Continente",brand:"Continente Cremoso Morango",price:1.35,pack:640,unit:"g",format:"4 × 160 g",note:"Preço observado online em 20/09/2026; custo de fazer em casa ainda a confirmar."}
+        {store:"Continente",brand:"Continente Cremoso Morango",price:1.65,pack:1000,unit:"g",format:"1 kg",note:"Preço observado online em 20/09/2026.",validation:"confirmada"},
+        {store:"Continente",brand:"Continente Cremoso Morango",price:1.35,pack:640,unit:"g",format:"4 × 160 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ]
     }
   };
