@@ -333,7 +333,9 @@ function addSaving(){
       const origem=[x.store,x.brand].filter(Boolean).join(" · ")||"sem origem/marca";
       return "• "+origem+" · "+money(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"");
     }).join("\n");
-    if(!confirm(name+" já está nesta simulação com outros dados:\n\n"+resumo+"\n\nQuer adicionar esta nova comparação?")) return;
+    const restantes=Math.max(0,anteriores.length-3);
+    const mais=restantes ? "\n• + "+restantes+" comparação"+(restantes===1?"":"ões")+" anterior"+(restantes===1?"":"es") : "";
+    if(!confirm(name+" já está nesta simulação com outros dados:\n\n"+resumo+mais+"\n\nQuer adicionar esta nova comparação?")) return;
   }
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
