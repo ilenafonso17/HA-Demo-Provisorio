@@ -328,7 +328,12 @@ function addSaving(){
   if(duplicate){
     if(!confirm("Esta comparação de "+name+" já parece estar adicionada. Quer duplicá-la mesmo assim?")) return;
   }else if((db.savings||[]).some(x=>x.p===name)){
-    if(!confirm(name+" já está nesta simulação com outros dados. Quer adicionar esta nova comparação?")) return;
+    const anteriores=(db.savings||[]).filter(x=>x.p===name);
+    const resumo=anteriores.slice(0,3).map(x=>{
+      const origem=[x.store,x.brand].filter(Boolean).join(" · ")||"sem origem/marca";
+      return "• "+origem+" · "+money(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"");
+    }).join("\n");
+    if(!confirm(name+" já está nesta simulação com outros dados:\n\n"+resumo+"\n\nQuer adicionar esta nova comparação?")) return;
   }
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
