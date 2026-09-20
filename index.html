@@ -32,7 +32,7 @@
         <div class="unit-info"><label>Medida usada</label><div id="p_unit_display" class="readout">—</div><select id="p_unit" hidden aria-hidden="true"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select><div id="p_unit_help" class="small"></div></div>
         <div><label>Quantas embalagens usa de cada vez?</label><select id="p_qty" title="Escolha quantas embalagens entram neste hábito de consumo"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select><div class="small">Aqui conta embalagens inteiras. Se usa apenas meia embalagem, escolha 1 e indique acima que usa apenas uma parte.</div></div>
         <div><label>Com que frequência compra/usa esta quantidade?</label><select id="p_period"></select><div id="p_period_help" class="small">A frequência aplica-se à quantidade indicada acima.</div></div>
-        <div><label>Fazer em casa custa</label><input id="p_home" readonly></div>
+        <div class="home-cost-info"><label>Custo de fazer em casa</label><div id="p_home_display" class="readout">—</div><input id="p_home" readonly hidden aria-hidden="true"><div id="p_home_help" class="small">Valor de referência do Tachinho para a quantidade produzida.</div></div>
       </div>
       <p id="p_note" class="small"></p>
       <button onclick="addSaving()">Adicionar</button>
