@@ -3,17 +3,6 @@ const APP_MODE = "tachinho";
 const APP_TITLE = "Tachinho — Comprar ou fazer?";
 const KEY = "tachinho_v1";
 
-const SECTIONS = {
-  dashboard:"Início",
-  clients:"Clientes",
-  finance:"Financiamento",
-  savings:"🥘 Tachinho",
-  agenda:"Agenda",
-  stats:"Estatísticas",
-  recruits:"Recrutas",
-  settings:"Definições"
-};
-
 const PRODUCTS = {
   "Iogurte sólido": {home:1.01, yield:8, unit:"un", label:"8 unidades", status:"validado", periods:["dia","semana","mês"]},
   "Iogurte de soja": {home:1.95, yield:8, unit:"un", label:"8 unidades", status:"validado", periods:["dia","semana","mês"]},
@@ -109,149 +98,22 @@ let db = loadDB();
 
 function loadDB(){
   try{
-    const raw = localStorage.getItem(KEY);
+    const raw=localStorage.getItem(KEY);
     if(raw){
       const data=JSON.parse(raw);
       if(!data.schemaVersion) data.schemaVersion=1;
-      if(!data.prices || !data.prices.references){
-        if(data.prices) data.legacyPricesBackup={savedAt:new Date().toISOString(),data:data.prices};
-        data.prices=defaultPrices();
-      }
-      data.clients=data.clients||[];
-      data.savings=data.savings||[];
-      data.recruits=data.recruits||[];
-      return data;
+      if(!data.prices || !data.prices.references) data.prices=defaultPrices();
+      data.savings=Array.isArray(data.savings)?data.savings:[];
+      return {schemaVersion:2,savings:data.savings,prices:data.prices,lastSavedAt:data.lastSavedAt||""};
     }
   }catch(e){}
-  return {schemaVersion:2,clients:[], savings:[], recruits:[], prices:defaultPrices()};
+  return {schemaVersion:2,savings:[],prices:defaultPrices()};
 }
 function persist(){ db.schemaVersion=2; db.lastSavedAt=new Date().toISOString(); localStorage.setItem(KEY, JSON.stringify(db)); renderAll(); }
 function euro(n){ return (Number(n)||0).toLocaleString("pt-PT",{style:"currency",currency:"EUR"}); }
 function num(v){ return Number(String(v||"").replace(",", ".")) || 0; }
 function $(id){ return document.getElementById(id); }
 function escapeHTML(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-
-function initNav(){
-  const nav=$("nav");
-  if(nav) nav.innerHTML="";
-}
-function show(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  $(id).classList.add("active");
-  renderAll();
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-
-/* CLIENTES */
-const CLIENT_FIELDS = ["nome","tel","email","morada","nif","nasc","zona","terra","modelo","demoData","demoTipo","loja","vp","compra","valorVenda","campanha","vpv","aula","vm","estado","contactos","acordos","obs"];
-function clientFromForm(){
-  const c = {id: $("c_edit_id").value || String(Date.now())};
-  CLIENT_FIELDS.forEach(f => c[f] = $("c_"+f).value.trim ? $("c_"+f).value.trim() : $("c_"+f).value);
-  return c;
-}
-function saveClient(){
-  const c = clientFromForm();
-  if(!c.nome){ alert("Escreva o nome da cliente."); return; }
-  db.clients = db.clients.filter(x => String(x.id) !== String(c.id));
-  db.clients.push(c);
-  persist();
-  clearClient();
-  alert("Cliente guardada.");
-}
-function clearClient(){
-  $("c_edit_id").value="";
-  document.querySelectorAll("#clients input,#clients textarea").forEach(e=>e.value="");
-  $("c_zona").value="";
-  $("c_modelo").value="Nunca teve";
-  $("c_demoTipo").value="";
-  $("c_loja").value="Não";
-  $("c_estado").value="Pendente";
-}
-function removeClient(id){
-  if(confirm("Retirar esta cliente?")){
-    db.clients = db.clients.filter(c=>String(c.id)!==String(id));
-    persist();
-  }
-}
-function editClient(id){
-  const c = db.clients.find(x=>String(x.id)===String(id));
-  if(!c) return;
-  $("c_edit_id").value = c.id;
-  CLIENT_FIELDS.forEach(f => { if($("c_"+f)) $("c_"+f).value = c[f] || ""; });
-  show("clients");
-}
-function quick(type){
-  $("q").value="";
-  $("qmodelo").value="";
-  $("qmes").value="";
-  $("qzona").value="";
-  $("q").dataset.quick=type;
-  renderClients();
-}
-function renderClients(){
-  if(!$("clientTable")) return;
-  let arr = [...db.clients];
-  const text = ($("q").value||"").toLowerCase();
-  const quick = $("q").dataset.quick || "";
-  if(text) arr = arr.filter(c => JSON.stringify(c).toLowerCase().includes(text));
-  if($("qmodelo").value) arr = arr.filter(c => c.modelo === $("qmodelo").value);
-  if($("qzona").value) arr = arr.filter(c => c.zona === $("qzona").value);
-  if($("qmes").value) arr = arr.filter(c => (c.nasc||"").slice(5,7) === $("qmes").value);
-  if(quick==="pendentes") arr = arr.filter(c => c.demoData && !c.compra && c.estado !== "Comprou");
-  if(quick==="acordos") arr = arr.filter(c => c.acordos);
-  if(quick==="loja") arr = arr.filter(c => c.loja==="Sim" || c.demoTipo==="Loja");
-  if(quick==="aulas") arr = arr.filter(c => c.aula);
-  if(quick==="vpv") arr = arr.filter(c => c.vpv);
-  if(quick==="vm") arr = arr.filter(c => c.vm);
-
-  const sort = $("qsort").value;
-  arr.sort((a,b)=>{
-    if(sort==="za") return (b.nome||"").localeCompare(a.nome||"");
-    if(sort==="demo") return (a.demoData||"9999").localeCompare(b.demoData||"9999");
-    if(sort==="nasc") return (a.nasc||"9999").slice(5).localeCompare((b.nasc||"9999").slice(5));
-    return (a.nome||"").localeCompare(b.nome||"");
-  });
-
-  $("clientTable").innerHTML = `<table>
-    <tr><th>Nome</th><th>Contacto</th><th>Zona/Terra</th><th>Bimby</th><th>Demo</th><th>Venda</th><th>Ações</th></tr>
-    ${arr.map(c=>`<tr>
-      <td><b>${escapeHTML(c.nome||"")}</b><br><span class="small">🎂 ${escapeHTML(c.nasc||"")}</span></td>
-      <td>${escapeHTML(c.tel||"")}<br><span class="small">${escapeHTML(c.email||"")}<br>NIF: ${escapeHTML(c.nif||"")}</span></td>
-      <td>${escapeHTML(c.zona||"")}<br><span class="small">${escapeHTML(c.terra||"")}</span></td>
-      <td>${escapeHTML(c.modelo||"")}</td>
-      <td>${escapeHTML(c.demoData||"")}<br><span class="small">${escapeHTML(c.demoTipo||"")} · Loja: ${escapeHTML(c.loja||"")}</span></td>
-      <td>${escapeHTML(c.compra||"—")}<br><span class="small">VP: ${escapeHTML(c.vp||"")} · ${euro(num(c.valorVenda))}</span></td>
-      <td><button class="secondary" onclick="editClient('${c.id}')">Editar</button> <button class="danger" onclick="removeClient('${c.id}')">Retirar</button></td>
-    </tr>`).join("")}
-  </table>`;
-}
-
-/* FINANCEIRO */
-function initFinance(){
-  $("finCards").innerHTML = [1,2,3,4].map(i => `<div class="opt">
-    <h3>Opção ${i}</h3>
-    <label>Título</label><input id="f_t${i}" placeholder="Ex.: TM7 + Bundle">
-    <label>Valor a pronto (€)</label><input id="f_pp${i}" inputmode="decimal" placeholder="Ex.: 1549">
-    <label>Meses</label><input id="f_m${i}" inputmode="numeric" placeholder="Ex.: 50">
-    <label>Mensalidade</label><input id="f_v${i}" inputmode="decimal" placeholder="Ex.: 39,50">
-    <div id="f_r${i}" class="small" style="margin-top:12px"></div>
-  </div>`).join("");
-}
-function calcFinance(){
-  let out = "";
-  for(let i=1;i<=4;i++){
-    const title = $("f_t"+i).value || "Opção " + i;
-    const pp = num($("f_pp"+i).value);
-    const months = num($("f_m"+i).value);
-    const mensal = num($("f_v"+i).value);
-    const total = months * mensal;
-    const saving = total - pp;
-    $("f_r"+i).innerHTML = `💳 Total financiado: <b>${euro(total)}</b><br>📅 ${months} × ${euro(mensal)}<br>💶 Pagamento a pronto: <b>${euro(pp)}</b><br>🎁 Poupa a pronto: <b>${euro(saving)}</b>`;
-    if(total || pp) out += `${title}\nTotal financiado: ${euro(total)}\nFinanciamento: ${months} x ${euro(mensal)}\nPagamento a pronto: ${euro(pp)}\nPoupa a pronto: ${euro(saving)}\n\n`;
-  }
-  $("finSummary").textContent = out || "Preencha uma opção para gerar o resumo.";
-}
-function copyFinance(){ navigator.clipboard.writeText($("finSummary").textContent || ""); alert("Resumo copiado. Já pode colar onde quiser."); }
 
 /* POUPANÇA — TACHINHO */
 function initSavings(){
@@ -390,7 +252,7 @@ function newSavingsSimulation(){
   loadFormats();
   if($("p_ref")) $("p_ref").innerHTML='<option value="">Escolher o preço</option>';
   persist();
-  show("savings");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 function simpleConfidenceLabel(x){
   if(x.confidenceLevel==="alta") return "🟢 Confirmado";
@@ -483,118 +345,9 @@ function whatsappSavings(){
   window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText());
 }
 
-/* AGENDA / ESTATÍSTICAS */
-function agendaItems(){
-  const arr = [];
-  db.clients.forEach(c=>{
-    [["Demo",c.demoData],["Aula Cozinha",c.aula],["VPV",c.vpv],["VM",c.vm],["Aniversário", c.nasc ? new Date().getFullYear()+"-"+c.nasc.slice(5) : ""]].forEach(([type,date])=>{
-      if(date) arr.push({date,type,name:c.nome,tel:c.tel});
-    });
-  });
-  return arr.sort((a,b)=>a.date.localeCompare(b.date));
-}
-function agendaFilter(filter){
-  let arr = agendaItems();
-  const today = new Date().toISOString().slice(0,10);
-  if(filter==="today") arr = arr.filter(x=>x.date===today);
-  if(filter==="week"){
-    const end = new Date(); end.setDate(end.getDate()+7);
-    arr = arr.filter(x=>x.date>=today && x.date<=end.toISOString().slice(0,10));
-  }
-  if(filter==="month") arr = arr.filter(x=>x.date.slice(0,7)===today.slice(0,7));
-  $("agendaTable").innerHTML = `<table><tr><th>Data</th><th>Tipo</th><th>Cliente</th><th>Telefone</th></tr>${arr.map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${escapeHTML(x.name)}</td><td>${escapeHTML(x.tel||"")}</td></tr>`).join("")}</table>`;
-}
-function renderStats(){
-  if(!$("statsBox")) return;
-  const clients = db.clients;
-  const demos = clients.filter(c=>c.demoData).length;
-  const sales = clients.filter(c=>c.compra || c.estado==="Comprou").length;
-  const conv = demos ? Math.round((sales/demos)*100) : 0;
-  const total = clients.reduce((a,c)=>a+num(c.valorVenda),0);
-  $("statsBox").innerHTML = `<div class="grid5">
-    <div class="stat"><b>Clientes</b><br>${clients.length}</div>
-    <div class="stat"><b>Demos</b><br>${demos}</div>
-    <div class="stat"><b>Vendas</b><br>${sales}</div>
-    <div class="stat"><b>Conversão</b><br>${conv}%</div>
-    <div class="stat"><b>Total vendido</b><br>${euro(total)}</div>
-  </div><br>${["TM31","TM5","TM6","TM7","Nunca teve"].map(m=>`<span class="pill">${m}: ${clients.filter(c=>c.modelo===m).length}</span> `).join("")}`;
-}
-function renderDashboard(){
-  const todayMD = new Date().toISOString().slice(5,10);
-  const birthdays = db.clients.filter(c=>(c.nasc||"").slice(5)===todayMD);
-  const pending = db.clients.filter(c=>c.demoData && !c.compra && c.estado!=="Comprou");
-  $("daily").textContent = `Hoje tem ${birthdays.length} aniversário(s) e ${pending.length} cliente(s) pendente(s).`;
-  $("agendaNext").innerHTML = agendaItems().slice(0,6).map(x=>`<div>${x.date} · ${x.type} · ${escapeHTML(x.name)}</div>`).join("") || "Sem agenda.";
-  $("followList").innerHTML = pending.slice(0,6).map(c=>`<div>${escapeHTML(c.nome)} · ${escapeHTML(c.tel||"")}</div>`).join("") || "Sem pendentes.";
-}
-
-/* RECRUTAS */
-function saveRecruit(){
-  if(!$("r_nome").value.trim()){ alert("Escreva o nome da recruta."); return; }
-  db.recruits.push({id:Date.now(), nome:$("r_nome").value.trim(), contactos:$("r_contactos").value.trim()});
-  $("r_nome").value=""; $("r_contactos").value="";
-  persist();
-}
-function removeRecruit(id){
-  db.recruits = db.recruits.filter(r=>String(r.id)!==String(id));
-  persist();
-}
-function renderRecruits(){
-  if(!$("r_list")) return;
-  $("r_list").innerHTML = db.recruits.map(r=>`<div class="card"><b>${escapeHTML(r.nome)}</b><pre>${escapeHTML(r.contactos)}</pre><button class="danger" onclick="removeRecruit('${r.id}')">Retirar</button></div>`).join("") || "Sem recrutas registadas.";
-}
-
-/* BACKUP / PREÇOS */
-function savePrices(){
-  try{
-    db.prices = JSON.parse($("priceJson").value);
-    persist();
-    alert("Preços guardados.");
-  }catch(e){ alert("A tabela tem erro. Verifique o formato JSON."); }
-}
-function exportBackup(){
-  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
-  const payload={...db,backupMeta:{createdAt:new Date().toISOString(),schemaVersion:db.schemaVersion||2,app:"Tachinho"}};
-  download(JSON.stringify(payload,null,2), "backup-tachinho-"+stamp+".json", "application/json");
-}
-function importBackup(file){
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const imported=JSON.parse(reader.result);
-      if(!imported || typeof imported!=="object" || !Array.isArray(imported.clients) || !Array.isArray(imported.savings)){
-        alert("Este ficheiro não parece ser um backup válido do Tachinho.");
-        return;
-      }
-      const version=Number(imported.schemaVersion||imported.backupMeta?.schemaVersion||1);
-      if(version>2){
-        alert("Este backup foi criado numa versão mais recente do Tachinho. Não será importado para evitar perda de dados.");
-        return;
-      }
-      if(!confirm("Importar este backup? Os dados atuais deste dispositivo serão substituídos.")) return;
-      db=imported;
-      persist();
-      alert("Backup importado com sucesso.");
-    }catch(e){ alert("Ficheiro inválido. Nenhum dado foi alterado."); }
-  };
-  reader.readAsText(file);
-}
-function exportCSV(){
-  const cols = ["nome","tel","email","morada","nif","nasc","zona","terra","modelo","demoData","demoTipo","loja","vp","compra","valorVenda","campanha","vpv","aula","vm","estado","contactos","acordos","obs"];
-  const csv = cols.join(";") + "\n" + db.clients.map(c=>cols.map(k=>`"${String(c[k]||"").replaceAll('"','""')}"`).join(";")).join("\n");
-  download(csv, "clientes-"+APP_MODE+".csv", "text/csv;charset=utf-8");
-}
-function download(text, name, type){
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([text], {type}));
-  a.download = name;
-  a.click();
-}
 function renderAll(){
   renderSavings();
 }
-initNav();
 initSavings();
 renderAll();
 if("serviceWorker" in navigator){ navigator.serviceWorker.register("service-worker.js").catch(()=>{}); }
