@@ -413,7 +413,20 @@ function savingsText(){
   const balance=t.extraAnnual>0?`\nCustos adicionais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\nSaldo líquido: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"}`:"";
   return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\nPoupança estimada com os hábitos indicados:\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${balance}\n\nOs valores são uma estimativa baseada nos preços, quantidades e frequência considerados. O preço real e os custos dos ingredientes podem variar.`;
 }
-function copySavings(){ navigator.clipboard.writeText(savingsText()); alert("Resumo copiado."); }
+async function copySavings(){
+  const txt=savingsText();
+  try{
+    if(navigator.clipboard?.writeText) await navigator.clipboard.writeText(txt);
+    else throw new Error("clipboard unavailable");
+    alert("Resumo copiado.");
+  }catch(e){
+    const area=document.createElement("textarea");
+    area.value=txt; area.setAttribute("readonly",""); area.style.position="fixed"; area.style.opacity="0";
+    document.body.appendChild(area); area.select();
+    const ok=document.execCommand("copy"); document.body.removeChild(area);
+    alert(ok?"Resumo copiado.":"Não foi possível copiar automaticamente. Pode selecionar e copiar o resumo manualmente.");
+  }
+}
 function whatsappSavings(){ window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText()); }
 
 /* AGENDA / ESTATÍSTICAS */
