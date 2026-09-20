@@ -337,7 +337,7 @@ function addSaving(){
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
-  if($("p_price")) $("p_price").focus();
+  if($("p_prod")) $("p_prod").focus();
 }
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
