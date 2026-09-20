@@ -28,7 +28,7 @@ const PRODUCTS = {
   "Farinha de arroz": {home:0.23, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Iogurte líquido": {home:1.89, yield:1000, unit:"ml", label:"aprox. 1 L", status:"validado", source:"Base Cookidoo para iogurte líquido; leite meio-gordo + fermento/iogurte de arranque. Valor conservador provisório, a afinar por receita/sabor e rendimento final.", periods:["dia","semana","mês"]},
-  "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar — sem receita oficial de produção confirmada", source:"Não usar no cálculo até existir receita-base de produção e rendimento verificáveis.", periods:["semana","mês"]},
+  "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"aproveitamento · rendimento por validar", source:"Não usar no cálculo até existir receita-base de produção e rendimento verificáveis.", periods:["semana","mês"]},
   "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"estimativa mínima — não usar como sugerido final", source:"Cookidoo · Pão de água com massa-mãe (620 g); 0,45 € cobre essencialmente a farinha T65. Falta fechar água/sal/azeite e manutenção da massa-mãe.", periods:["semana","mês"]},
   "Pão de Mafra": {home:0.43, yield:650, unit:"g", label:"650 g", status:"estimativa mínima — não usar como sugerido final", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g): 550 g farinha T65 + 50 g farinha de centeio + 50 g isco; falta fechar centeio, isco, sal e azeite.", periods:["semana","mês"]},
   "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços encontrados de 20/09/2026", periods:["semana","mês"]}
@@ -347,9 +347,13 @@ function runMathSelfTests(){
   return failures;
 }
 
+function productAvailabilityNote(name,p){
+  if(name==="Requeijão") return "Aproveitamento do soro do queijo fresco; não entra no cálculo monetário até existir rendimento final pesado.";
+  return p.status||"a validar";
+}
 function pendingHomeCostProducts(){
   return Object.entries(PRODUCTS).filter(([,p])=>validationState(p)!=="validated").map(([name,p])=>({
-    name,status:p.status||"a validar",home:p.home,yield:p.yield,unit:p.unit,label:p.label||""
+    name,status:productAvailabilityNote(name,p),home:p.home,yield:p.yield,unit:p.unit,label:p.label||""
   }));
 }
 function auditProductData(){
