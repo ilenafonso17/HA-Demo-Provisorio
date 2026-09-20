@@ -96,6 +96,22 @@ function defaultPrices(){
 
 let db = loadDB();
 
+function auditReferenceUnits(){
+  const issues=[];
+  const refs=db?.prices?.references||{};
+  Object.entries(refs).forEach(([product,list])=>{
+    const expected=PRODUCTS[product]?.unit;
+    (list||[]).forEach(r=>{
+      if(expected && !compatibleUnit(expected,r.unit)){
+        issues.push({product,brand:r.brand||"",store:r.store||"",expected,found:r.unit,format:r.format||""});
+      }
+    });
+  });
+  if(issues.length) console.warn("Tachinho: referências excluídas por unidade incompatível",issues);
+  else console.info("Tachinho: todas as referências têm unidades compatíveis.");
+  return issues;
+}
+
 function loadDB(){
   let prices=defaultPrices();
   try{
