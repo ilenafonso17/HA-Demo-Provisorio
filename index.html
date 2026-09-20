@@ -100,7 +100,7 @@
       <p class="pill">Supermercado × Feito em casa</p>
       <div class="grid3">
         <div><label>Produto</label><select id="p_prod" onchange="loadFormats()"></select></div>
-        <div><label>Onde compra?</label><select id="p_store" onchange="loadReferenceOptions()"><option>Aldi</option><option>Auchan</option><option>Continente</option><option>Intermarché</option><option>Lidl</option><option>Mercadona</option><option>Pingo Doce</option><option>Outro</option><option>Pizzaria</option></select></div>
+        <div><label>Onde compra?</label><select id="p_store" onchange="loadReferenceOptions()"><option value="">Escolha</option><option>Aldi</option><option>Auchan</option><option>Continente</option><option>Intermarché</option><option>Lidl</option><option>Mercadona</option><option>Outro</option><option>Pingo Doce</option><option>Pizzaria</option></select></div>
         <div><label>Escolher preço</label><select id="p_ref" onchange="applySelectedReference()"><option value="">Escolher o preço</option></select></div>
         <div><label>Marca (opcional)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
         <div><label>Quanto paga? (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode substituir a referência" oninput="markManualPrice()"></div>
