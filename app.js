@@ -324,8 +324,11 @@ function addSaving(){
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
-  if((db.savings||[]).some(x=>x.p===name)){
-    if(!confirm(name+" já está nesta simulação. Quer adicionar outra comparação do mesmo produto?")) return;
+  const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && Number(x.qty)===qty && x.period===period);
+  if(duplicate){
+    if(!confirm("Esta comparação de "+name+" já parece estar adicionada. Quer duplicá-la mesmo assim?")) return;
+  }else if((db.savings||[]).some(x=>x.p===name)){
+    if(!confirm(name+" já está nesta simulação com outros dados. Quer adicionar esta nova comparação?")) return;
   }
   if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
