@@ -112,6 +112,7 @@ function loadDB(){
     const raw = localStorage.getItem(KEY);
     if(raw){
       const data=JSON.parse(raw);
+      if(!data.schemaVersion) data.schemaVersion=1;
       if(!data.prices || !data.prices.references){
         if(data.prices) data.legacyPricesBackup={savedAt:new Date().toISOString(),data:data.prices};
         data.prices=defaultPrices();
@@ -122,9 +123,9 @@ function loadDB(){
       return data;
     }
   }catch(e){}
-  return {clients:[], savings:[], recruits:[], prices:defaultPrices()};
+  return {schemaVersion:2,clients:[], savings:[], recruits:[], prices:defaultPrices()};
 }
-function persist(){ localStorage.setItem(KEY, JSON.stringify(db)); renderAll(); }
+function persist(){ db.schemaVersion=2; db.lastSavedAt=new Date().toISOString(); localStorage.setItem(KEY, JSON.stringify(db)); renderAll(); }
 function euro(n){ return (Number(n)||0).toLocaleString("pt-PT",{style:"currency",currency:"EUR"}); }
 function num(v){ return Number(String(v||"").replace(",", ".")) || 0; }
 function $(id){ return document.getElementById(id); }
