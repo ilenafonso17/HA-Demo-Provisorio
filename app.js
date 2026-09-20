@@ -354,6 +354,33 @@ function auditProductData(){
   return issues;
 }
 
+function auditReferenceData(){
+  const issues=[];
+  const refs=db.prices?.references||{};
+  for(const [productName,list] of Object.entries(refs)){
+    const p=PRODUCTS[productName];
+    if(!p){ issues.push(productName+" · produto inexistente"); continue; }
+    if(!Array.isArray(list)){ issues.push(productName+" · referências inválidas"); continue; }
+    list.forEach((r,index)=>{
+      const id=productName+" · referência "+(index+1);
+      if(!String(r.store||"").trim()) issues.push(id+" · sem loja");
+      if(!String(r.brand||"").trim()) issues.push(id+" · sem identificação");
+      if(!Number.isFinite(Number(r.price)) || Number(r.price)<=0) issues.push(id+" · preço inválido");
+      if(!Number.isFinite(Number(r.pack)) || Number(r.pack)<=0) issues.push(id+" · quantidade inválida");
+      if(!["g","ml","un"].includes(r.unit)) issues.push(id+" · unidade inválida");
+      if(!String(r.format||"").trim()) issues.push(id+" · formato não descrito");
+      if(!compatibleUnit(p.unit,r.unit)) issues.push(id+" · unidade incompatível com "+productName+" (fica bloqueada)");
+    });
+  }
+  const updated=String(db.prices?.updatedAt||"");
+  const review=String(db.prices?.reviewAfter||"");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(updated)) issues.push("preços · data de atualização inválida");
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(review)) issues.push("preços · data de revisão inválida");
+  if(issues.length) console.warn("Tachinho: auditoria das referências encontrou pontos a rever:",issues);
+  else console.info("Tachinho: estrutura das referências de preço OK.");
+  return issues;
+}
+
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
   if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado"};
