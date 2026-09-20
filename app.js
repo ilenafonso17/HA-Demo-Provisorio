@@ -282,13 +282,18 @@ function applySelectedReference(){
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
-function canUseHomeCost(p){ return p.home!=null && !String(p.status||"").includes("não usar"); }
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não utilizar"};
   if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Alta · custo caseiro validado + preço real"};
   if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Boa · custo caseiro validado + preço de referência"};
   return {level:"provisoria",label:"🟡 Provisória · custo por receita ainda a validar"};
 }
+function validationState(p){
+  if(!p || p.home==null) return "blocked";
+  if(p.status==="validado") return "validated";
+  return "provisional";
+}
+function canUseHomeCost(p){ return validationState(p)==="validated"; }
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
   const consumedEach=num($("p_consumed")?.value)||pack;
