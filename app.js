@@ -185,7 +185,7 @@ function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
   const refs=sortReferences(all.filter(x=>x.store===store));
   $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
-  $("p_ref").value="";
+  $("p_ref").value="";\n  syncBrandVisibility();
   $("p_brand").value="";
   $("p_price").value="";
   $("p_packqty").value="";
@@ -195,12 +195,19 @@ function loadReferenceOptions(){
 }
 // IMPORTANTE: daqui para a frente, simplificar apenas textos visíveis ao utilizador.
  // Não alterar identificadores internos (priceSource, status, schemaVersion, chaves ou valores usados na lógica).
-function markManualPrice(){
+function syncBrandVisibility(){
+  const wrap=$("p_brand_wrap");
+  if(!wrap) return;
+  const hasReference=String($("p_ref")?.value||"")!=="";
+  wrap.hidden=!hasReference;
+  if(!hasReference && $("p_brand")) $("p_brand").value="";
+}
+function markManualPrice(){\n  syncBrandVisibility();
   if($("p_ref")) $("p_ref").value="";
   if($("p_brand") && !$("p_brand").value.trim()) $("p_brand").placeholder="Opcional — pode indicar a marca da cliente";
   if($("p_ref_help")) $("p_ref_help").textContent="Preço introduzido manualmente — será tratado como o preço real que a pessoa paga.";
 }
-function applySelectedReference(){
+function applySelectedReference(){\n  syncBrandVisibility();
   const name=$("p_prod").value, store=$("p_store").value, refs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===store));
   const idx=$("p_ref").value;
   if(idx==="") return;
