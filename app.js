@@ -331,6 +331,8 @@ function addSaving(){
   const confidence=calculationConfidence(p,priceSource);
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
   persist();
+  if($("p_consumed")) $("p_consumed").value="";
+  if($("p_qty")) $("p_qty").value="1";
 }
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
