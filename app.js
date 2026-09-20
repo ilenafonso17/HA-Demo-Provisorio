@@ -446,8 +446,22 @@ function importBackup(file){
   if(!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    try{ db = JSON.parse(reader.result); persist(); alert("Backup importado."); }
-    catch(e){ alert("Ficheiro inválido."); }
+    try{
+      const imported=JSON.parse(reader.result);
+      if(!imported || typeof imported!=="object" || !Array.isArray(imported.clients) || !Array.isArray(imported.savings)){
+        alert("Este ficheiro não parece ser um backup válido do Tachinho.");
+        return;
+      }
+      const version=Number(imported.schemaVersion||imported.backupMeta?.schemaVersion||1);
+      if(version>2){
+        alert("Este backup foi criado numa versão mais recente do Tachinho. Não será importado para evitar perda de dados.");
+        return;
+      }
+      if(!confirm("Importar este backup? Os dados atuais deste dispositivo serão substituídos.")) return;
+      db=imported;
+      persist();
+      alert("Backup importado com sucesso.");
+    }catch(e){ alert("Ficheiro inválido. Nenhum dado foi alterado."); }
   };
   reader.readAsText(file);
 }
