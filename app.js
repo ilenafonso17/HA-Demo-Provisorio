@@ -393,9 +393,20 @@ function savingsText(){
   const netDay=netAnnual/365, netWeek=netAnnual/52;
   const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
   const saldoLabel=t.extraAnnual>0?"No total":"Poupa";
-  const equivalenciaLabel="Por dia e por semana";
-  const equivalencia=netAnnual===0?"":`\n${equivalenciaLabel}: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
-  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}\n\nEstes valores são uma estimativa. Podem mudar conforme os preços, as quantidades e a frequência de compra.`;
+  const equivalencia=netAnnual===0?"":`\nPor dia e por semana: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
+  let payment="";
+  const mensal=parseNumber($("roi_monthly")?.value), months=parseNumber($("roi_months")?.value), typedTotal=parseNumber($("roi_total")?.value);
+  const safeMensal=Number.isFinite(mensal)&&mensal>=0?mensal:0;
+  const safeMonths=Number.isInteger(months)&&months>0?months:0;
+  const safeTotal=Number.isFinite(typedTotal)&&typedTotal>=0?typedTotal:0;
+  if(safeMensal>0 || safeTotal>0){
+    const impact=calculatePaymentImpact({netMonthly,monthlyPayment:safeMensal,months:safeMonths,total:safeTotal});
+    const cover=safeMensal>0?(impact.saving>=safeMensal?"A poupança cobre 100% da mensalidade.":`A poupança ajuda a pagar cerca de ${impact.percent.toFixed(0)}% da mensalidade.`):"";
+    const monthly=safeMensal>0?(impact.surplusPerMonth>0?` Sobram ${euro(impact.surplusPerMonth)} por mês.`:impact.missingPerMonth>0?` Faltam ${euro(impact.missingPerMonth)} por mês.`:""):"";
+    const period=impact.months>0?`\nAo fim de ${impact.months} meses, a poupança acumulada é ${euro(impact.accumulated)}${impact.total>0?` e ficam por compensar ${euro(impact.remaining)}`:""}.`:"";
+    payment=`\n\nMensalidade\n${cover}${monthly}${period}`;
+  }
+  return `Tachinho — Comprar ou fazer?${who?" · "+who:""}\n\n${lines}\n\n${gross}${saldoLabel}: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}${equivalencia}${payment}\n\nEstes valores são uma estimativa. Podem mudar conforme os preços, as quantidades e a frequência de compra.`;
 }
 async function copySavings(){
   if(!(db.savings||[]).length){ alert("Adicione pelo menos um produto antes de copiar o resumo."); return; }
