@@ -256,6 +256,10 @@ function runMathSelfTests(){
     ["embalagem inteira", {price:2,pack:1000,qty:1,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:1000,monthly:1,annual:12,extraHomeCost:0}],
     ["meia embalagem", {price:2,pack:1000,qty:0.5,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:500,monthly:0.5,annual:6,extraHomeCost:0}],
     ["consumo parcial", {price:4,pack:1000,qty:1,consumedEach:250,period:"semana",home:2,yieldAmount:1000}, {consumed:250,monthly:6.5,annual:78,extraHomeCost:0}],
+    ["embalagem maior que receita caseira", {price:3.6,pack:1500,qty:1,consumedEach:1500,period:"mês",home:1.2,yieldAmount:500}, {consumed:1500,marketCost:3.6,homeCost:3.6,monthly:0,annual:0,extraHomeCost:0}],
+    ["embalagem menor que receita caseira", {price:1.2,pack:250,qty:1,consumedEach:250,period:"mês",home:1.2,yieldAmount:500}, {consumed:250,marketCost:1.2,homeCost:0.6,monthly:0.6,annual:7.2,extraHomeCost:0}],
+    ["duas embalagens com consumo parcial", {price:4,pack:1000,qty:2,consumedEach:250,period:"mês",home:2,yieldAmount:1000}, {consumed:500,marketCost:2,homeCost:1,monthly:1,annual:12,extraHomeCost:0}],
+    ["meia embalagem com consumo parcial", {price:4,pack:1000,qty:0.5,consumedEach:400,period:"mês",home:2,yieldAmount:1000}, {consumed:200,marketCost:0.8,homeCost:0.4,monthly:0.4,annual:4.8,extraHomeCost:0}],
     ["duas embalagens", {price:2,pack:1000,qty:2,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {consumed:2000,monthly:2,annual:24,extraHomeCost:0}],
     ["sem diferença", {price:1,pack:1000,qty:1,consumedEach:1000,period:"mês",home:1,yieldAmount:1000}, {monthly:0,annual:0,extraHomeCost:0}],
     ["fazer em casa mais caro", {price:1,pack:1000,qty:1,consumedEach:1000,period:"mês",home:2,yieldAmount:1000}, {monthly:0,annual:0,extraHomeCost:12}],
@@ -283,7 +287,7 @@ function runMathSelfTests(){
     }
   }
   if(failures.length) console.error("Tachinho: falharam testes matemáticos:",failures);
-  else console.info("Tachinho: testes matemáticos essenciais OK ("+cases.length+").");
+  else console.info("Tachinho: testes matemáticos essenciais OK ("+(cases.length+paymentCases.length)+").");
   return failures;
 }
 
