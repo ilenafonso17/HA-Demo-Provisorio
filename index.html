@@ -29,7 +29,7 @@
         <div><label>Quanto paga? (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode escrever o preço que paga" oninput="markManualPrice()"></div>
         <div><label>Quanto traz a embalagem?</label><input id="p_packqty" inputmode="decimal" value="1"></div>
         <div><label>Quanto usa de cada embalagem?</label><input id="p_consumed" inputmode="decimal" placeholder="Vazio = embalagem inteira"><div class="small">Ex.: embalagem de 500 g e usa 250 g → escreva 250. Se usa tudo, deixe vazio.</div></div>
-        <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select></div>
+        <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select><div id="p_unit_help" class="small"></div></div>
         <div><label>Quantas embalagens compra/usa de cada vez?</label><select id="p_qty" title="Escolha quantas embalagens entram neste hábito de consumo"><option value="0.5">0,5</option><option value="1" selected>1</option><option value="1.5">1,5</option><option value="2">2</option><option value="2.5">2,5</option><option value="3">3</option><option value="3.5">3,5</option><option value="4">4</option><option value="4.5">4,5</option><option value="5">5</option></select><div class="small">Ex.: 2 embalagens e 250 g de cada → o Tachinho calcula 500 g usados.</div></div>
         <div><label>Com que frequência?</label><select id="p_period"></select></div>
         <div><label>Fazer em casa custa</label><input id="p_home" readonly></div>
