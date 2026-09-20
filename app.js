@@ -438,7 +438,9 @@ function savePrices(){
   }catch(e){ alert("A tabela tem erro. Verifique o formato JSON."); }
 }
 function exportBackup(){
-  download(JSON.stringify(db,null,2), "backup-"+APP_MODE+".json", "application/json");
+  const stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  const payload={...db,backupMeta:{createdAt:new Date().toISOString(),schemaVersion:db.schemaVersion||2,app:"Tachinho"}};
+  download(JSON.stringify(payload,null,2), "backup-tachinho-"+stamp+".json", "application/json");
 }
 function importBackup(file){
   if(!file) return;
