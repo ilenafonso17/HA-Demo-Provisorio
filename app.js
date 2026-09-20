@@ -338,6 +338,22 @@ function runMathSelfTests(){
   return failures;
 }
 
+function auditProductData(){
+  const issues=[];
+  for(const [name,p] of Object.entries(PRODUCTS)){
+    if(!p.unit || !["g","ml","un"].includes(p.unit)) issues.push(name+" · unidade inválida");
+    if(!Array.isArray(p.periods) || !p.periods.length) issues.push(name+" · sem frequências");
+    if(validationState(p)==="validated"){
+      if(!Number.isFinite(Number(p.home)) || Number(p.home)<=0) issues.push(name+" · custo caseiro inválido");
+      if(!Number.isFinite(Number(p.yield)) || Number(p.yield)<=0) issues.push(name+" · rendimento inválido");
+      if(!String(p.label||"").trim()) issues.push(name+" · rendimento sem descrição");
+    }
+  }
+  if(issues.length) console.error("Tachinho: problemas nos dados dos produtos:",issues);
+  else console.info("Tachinho: estrutura dos produtos validados OK.");
+  return issues;
+}
+
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
   if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado"};
