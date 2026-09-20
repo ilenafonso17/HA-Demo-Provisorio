@@ -515,6 +515,8 @@ function removeSaving(id){
   if(!confirm("Retirar "+(item.p||"este produto")+" desta conta?")) return;
   db.savings=db.savings.filter(x=>String(x.id)!==String(id));
   persist();
+  renderSavings();
+  renderPayment();
 }
 function newSavingsSimulation(){
   if((db.savings||[]).length && !confirm("Quer começar de novo? O resumo atual será apagado deste dispositivo.")) return;
