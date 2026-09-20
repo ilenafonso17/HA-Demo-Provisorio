@@ -484,6 +484,23 @@ function addSaving(){
   if($("p_qty")) $("p_qty").value="1";
 }
 function addAnotherProduct(){
+  if($("p_prod")) $("p_prod").selectedIndex=0;
+  if($("p_store")) $("p_store").value="";
+  if($("p_brand")) $("p_brand").value="";
+  if($("p_price")) $("p_price").value="";
+  if($("p_packqty")) $("p_packqty").value="";
+  if($("p_consumed")) $("p_consumed").value="";
+  if($("p_qty")) $("p_qty").value="1";
+  if($("p_use_all")) $("p_use_all").value="yes";
+  loadFormats();
+  if($("p_ref")){
+    $("p_ref").innerHTML='<option value="">Não usar referência</option>';
+    $("p_ref").value="";
+  }
+  if($("p_ref_help")) $("p_ref_help").textContent="Opcional: escolha uma loja apenas se quiser procurar um preço de referência.";
+  if($("add_feedback")) $("add_feedback").textContent="";
+  togglePartialUse();
+  syncBrandVisibility();
   if($("p_prod")) $("p_prod").focus();
   const card=$("p_prod")?.closest(".card");
   if(card) card.scrollIntoView({behavior:"smooth",block:"start"});
