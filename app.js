@@ -40,7 +40,7 @@ const PRODUCTS = {
   "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
   "Iogurte líquido": {home:null, yield:null, unit:"ml", label:"a validar", status:"a validar", periods:["dia","semana","mês"]},
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
-  "Pão de massa mãe": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
+  "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão de água com massa-mãe (620 g); cálculo mínimo com 650 g farinha T65 a 0,69 €/kg; água/sal/azeite residual e manutenção da massa-mãe devem ser afinados", periods:["semana","mês"]},
   "Pão de Mafra": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
   "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços de referência de 20/09/2026", periods:["semana","mês"]}
 };
