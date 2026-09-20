@@ -1,7 +1,7 @@
 
-const APP_MODE = "agente";
-const APP_TITLE = "Smart Pro Agente";
-const KEY = "smartpro_" + APP_MODE + "_v4";
+const APP_MODE = "tachinho";
+const APP_TITLE = "Tachinho — Comprar ou fazer?";
+const KEY = "tachinho_v1";
 
 const SECTIONS = {
   dashboard:"Início",
@@ -132,7 +132,8 @@ function $(id){ return document.getElementById(id); }
 function escapeHTML(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
 
 function initNav(){
-  $("nav").innerHTML = Object.entries(SECTIONS).map(([id,label]) => `<button type="button" onclick="show('${id}')">${label}</button>`).join("");
+  const nav=$("nav");
+  if(nav) nav.innerHTML="";
 }
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
@@ -591,16 +592,9 @@ function download(text, name, type){
   a.click();
 }
 function renderAll(){
-  renderDashboard();
-  renderClients();
   renderSavings();
-  agendaFilter("all");
-  renderStats();
-  renderRecruits();
-  if($("priceJson")) $("priceJson").value = JSON.stringify(db.prices, null, 2);
 }
 initNav();
-initFinance();
 initSavings();
 renderAll();
 if("serviceWorker" in navigator){ navigator.serviceWorker.register("service-worker.js").catch(()=>{}); }
