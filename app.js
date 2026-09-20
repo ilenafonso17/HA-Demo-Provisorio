@@ -128,13 +128,16 @@ function initSavings(){
 }
 function loadFormats(){
   const name=$("p_prod").value, p = PRODUCTS[name];
+  const usable=canUseHomeCost(p);
   $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
   $("p_unit").value = p.unit;\n  $("p_unit").disabled = true;\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
-  $("p_home").value = p.home==null ? "A validar" : euro(p.home)+" / "+p.label;
+  $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
+  const addBtn=document.querySelector('button[onclick="addSaving()"]');
+  if(addBtn){ addBtn.disabled=!usable; addBtn.title=usable?"":"Este produto ainda não tem o custo de fazer em casa validado."; }
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Fazer em casa custa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) encontrado(s); última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  $("p_note").textContent = !usable ? "⏳ Ainda estamos a validar quanto custa fazer este produto em casa. Pode consultar o produto, mas ainda não o pode adicionar à conta. "+(p.source||"") : "Fazer em casa custa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) encontrado(s); última atualização "+(db.prices.updatedAt||"—")+(stale?" · VER PREÇOS":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
   loadReferenceOptions();
 }
 function sortReferences(refs){
