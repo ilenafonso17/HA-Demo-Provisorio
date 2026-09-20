@@ -15,43 +15,35 @@ const SECTIONS = {
 };
 
 const PRODUCTS = {
-  "Iogurtes": {bimby:1.01, bformat:"pack 8", formats:["125ml","150ml","200ml","400ml","500ml","1000ml","pack 4","pack 6","pack 8"], periods:["dia","semana"]},
-  "Iogurtes soja": {bimby:1.95, bformat:"pack 8", formats:["125ml","pack 4","pack 8"], periods:["dia","semana"]},
-  "Leite com chocolate": {bimby:1.31, bformat:"pack 6", formats:["200ml","250ml","pack 6"], periods:["dia","semana"]},
-  "Granola": {bimby:3.39, bformat:"500g", formats:["150g","250g","300g","375g","400g","500g"], periods:["semana","mês"]},
-  "Manteiga amendoim": {bimby:1.19, bformat:"200g", formats:["180g","200g","balde 15kg"], periods:["semana","mês"]},
-  "Pão com chocolate": {bimby:2.48, bformat:"6 unidades", formats:["1 unidade","4 unidades","6 unidades","8 unidades"], periods:["dia","semana"]},
-  "Queijo fresco": {bimby:2.64, bformat:"pack 6", formats:["72g","85g","200g","250g","pack 4","pack 6"], periods:["dia","semana"]},
-  "Néctar de fruta": {bimby:1.02, bformat:"200ml", formats:["200ml","250ml","330ml","1000ml"], periods:["dia","semana"]},
-  "Bebida de soja": {bimby:0.67, bformat:"1200ml", formats:["pack 3 (250ml/cada)","250ml","1000ml","1200ml"], periods:["dia","semana"]},
-  "Pão": {bimby:0.68, bformat:"1kg", formats:["1kg","unidade bolinha"], periods:["dia","semana"]},
-  "Pizza": {bimby:4.70, bformat:"familiar", formats:["pequena supermercado","média supermercado","grande supermercado","familiar supermercado","pequena pizzaria","média pizzaria","grande pizzaria","familiar pizzaria"], periods:["semana"]},
-  "Nuggets": {bimby:3.44, bformat:"20 unidades", formats:["4 unidades","6 unidades","10 unidades","20 unidades","50 unidades"], periods:["semana","mês"]},
-  "Salgados": {bimby:4.20, bformat:"12 unidades", formats:["1 unidade","10 unidades","12 unidades"], periods:["semana","mês"]},
-  "Puré batata": {bimby:1.60, bformat:"1kg", formats:["200g","250g","1kg"], periods:["semana","mês"]},
-  "Bechamel": {bimby:0.78, bformat:"500g", formats:["200g","500g"], periods:["semana","mês"]},
-  "Maionese": {bimby:0.62, bformat:"300g", formats:["200g","300g","500g","550g"], periods:["semana","mês"]},
-  "Massa quebrada/folhada": {bimby:0.97, bformat:"230g", formats:["massa quebrada","massa folhada","230g"], periods:["semana","mês"]},
-  "Farinha arroz": {bimby:0.23, bformat:"500g", formats:["200g","500g"], periods:["semana","mês"]},
-  "Gelado": {bimby:2.07, bformat:"1000g", formats:["400g","500g","750g","1000g"], periods:["semana","mês"]},
-  "Puré maçã": {bimby:0.53, bformat:"400g", formats:["100g","200g","400g","700g"], periods:["dia","semana"]}
+  "Iogurte sólido": {home:1.01, yield:8, unit:"un", label:"8 unidades", status:"validado", periods:["dia","semana","mês"]},
+  "Iogurte de soja": {home:1.95, yield:8, unit:"un", label:"8 unidades", status:"validado", periods:["dia","semana","mês"]},
+  "Leite com chocolate": {home:1.31, yield:6, unit:"un", label:"6 unidades", status:"validado", periods:["dia","semana","mês"]},
+  "Granola": {home:3.39, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês"]},
+  "Manteiga de amendoim": {home:1.19, yield:200, unit:"g", label:"200 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Pão com chocolate": {home:2.48, yield:6, unit:"un", label:"6 unidades", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Queijo fresco": {home:2.64, yield:6, unit:"un", label:"6 unidades", status:"validado", periods:["dia","semana","mês"]},
+  "Néctar de fruta": {home:1.02, yield:200, unit:"ml", label:"200 ml", status:"validado", periods:["dia","semana","mês"]},
+  "Bebida de soja": {home:0.67, yield:1200, unit:"ml", label:"1200 ml", status:"validado", periods:["dia","semana","mês"]},
+  "Pão tradicional": {home:0.68, yield:1000, unit:"g", label:"1 kg", status:"validado", periods:["dia","semana","mês"]},
+  "Pizza": {home:4.70, yield:1, unit:"un", label:"1 familiar", status:"validado", periods:["semana","mês"]},
+  "Nuggets": {home:3.44, yield:20, unit:"un", label:"20 unidades", status:"validado", periods:["semana","mês"]},
+  "Salgados": {home:0.17, yield:1, unit:"un", label:"1 unidade", status:"validado", periods:["semana","mês"]},
+  "Sopa": {home:0.30, yield:250, unit:"ml", label:"250 ml", status:"validado", periods:["semana","mês"]},
+  "Puré de fruta": {home:0.16, yield:1, unit:"un", label:"1 porção", status:"validado", periods:["dia","semana","mês"]},
+  "Puré de maçã": {home:0.53, yield:400, unit:"g", label:"400 g", status:"validado", periods:["dia","semana","mês"]},
+  "Puré de batata": {home:1.60, yield:1000, unit:"g", label:"1 kg", status:"validado", periods:["semana","mês"]},
+  "Bechamel": {home:0.78, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Maionese": {home:0.62, yield:300, unit:"g", label:"300 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Massa quebrada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Massa folhada": {home:0.97, yield:230, unit:"g", label:"230 g", status:"referência a validar", periods:["semana","mês","2 meses","3 meses"]},
+  "Farinha de arroz": {home:0.23, yield:500, unit:"g", label:"500 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Gelado": {home:2.07, yield:1000, unit:"g", label:"1000 g", status:"validado", periods:["semana","mês","2 meses","3 meses"]},
+  "Iogurte líquido": {home:null, yield:null, unit:"ml", label:"a validar", status:"a validar", periods:["dia","semana","mês"]},
+  "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
+  "Pão de massa mãe": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
+  "Pão de Mafra": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
+  "Pão alentejano": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]}
 };
-
-function defaultPrices(){
-  const stores=["Continente","Pingo Doce","Lidl","Aldi","Auchan","Mercadona","Intermarché","Outro"];
-  const out={};
-  Object.keys(PRODUCTS).forEach((p,pi)=>{
-    out[p]={};
-    PRODUCTS[p].formats.forEach((f,fi)=>{
-      out[p][f]={};
-      stores.forEach((s,si)=>{
-        const mult = 1.85 + (si%4)*0.14 + (fi%3)*0.12 + (pi%5)*0.03;
-        out[p][f][s]= Number((PRODUCTS[p].bimby * mult).toFixed(2));
-      });
-    });
-  });
-  return out;
-}
 
 let db = loadDB();
 
@@ -189,49 +181,56 @@ function calcFinance(){
 }
 function copyFinance(){ navigator.clipboard.writeText($("finSummary").textContent || ""); alert("Resumo copiado."); }
 
-/* POUPANÇA */
+/* POUPANÇA — TACHINHO */
 function initSavings(){
   $("p_prod").innerHTML = Object.keys(PRODUCTS).map(p=>`<option>${p}</option>`).join("");
   loadFormats();
 }
 function loadFormats(){
-  const p = $("p_prod").value;
-  $("p_format").innerHTML = PRODUCTS[p].formats.map(f=>`<option>${f}</option>`).join("");
-  $("p_period").innerHTML = PRODUCTS[p].periods.map(f=>`<option>${f}</option>`).join("");
-  estimatePrice();
+  const p = PRODUCTS[$("p_prod").value];
+  $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
+  $("p_unit").value = p.unit;
+  $("p_home").value = p.home==null ? "A validar" : euro(p.home)+" / "+p.label;
+  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+". Introduza o preço e o formato que a pessoa compra realmente.";
 }
-function estimatePrice(){
-  const p = $("p_prod").value, f = $("p_format").value, s = $("p_store").value;
-  const val = db.prices?.[p]?.[f]?.[s];
-  $("p_price").value = val ?? "";
-}
-function weeklyFactor(period){ return period==="dia" ? 7 : period==="semana" ? 1 : 1/4.333; }
+function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
+function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
+function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function addSaving(){
-  const p = $("p_prod").value, fmt = $("p_format").value, store = $("p_store").value, period = $("p_period").value;
-  const price = num($("p_price").value), qty = num($("p_qty").value);
-  const bimbyWeek = PRODUCTS[p].bimby * qty * weeklyFactor(period);
-  const marketWeek = price * qty * weeklyFactor(period);
-  const saveWeek = marketWeek - bimbyWeek;
-  db.savings.push({id:Date.now(), p, fmt, store, period, price, qty, bimbyWeek, marketWeek, saveWeek});
+  const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
+  if(p.home==null){ alert("O custo feito em casa deste produto ainda está a validar."); return; }
+  if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
+  if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
+  const consumed=pack*qty, homeCost=(consumed/p.yield)*p.home, marketCost=price*qty, saving=Math.max(0,marketCost-homeCost), occ=yearlyOccurrences(period);
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,pack,unit,qty,period,homeCost,marketCost,monthly:saving*occ/12,annual:saving*occ});
   persist();
 }
-function removeSaving(id){
-  db.savings = db.savings.filter(x=>String(x.id)!==String(id));
-  persist();
+function removeSaving(id){ db.savings=db.savings.filter(x=>String(x.id)!==String(id)); persist(); }
+function normalizedSaving(x){
+  if(Number.isFinite(Number(x.monthly))&&Number.isFinite(Number(x.annual))) return x;
+  const w=Number(x.saveWeek)||0;
+  return {...x,monthly:w*52/12,annual:w*52};
+}
+function savingsTotals(){
+  return db.savings.map(normalizedSaving).reduce((a,x)=>({monthly:a.monthly+(Number(x.monthly)||0),annual:a.annual+(Number(x.annual)||0)}),{monthly:0,annual:0});
 }
 function renderSavings(){
   if(!$("savList")) return;
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Formato</th><th>Supermercado</th><th>Qtd.</th><th>Poupança/semana</th><th></th></tr>
-    ${db.savings.map(x=>`<tr><td>${escapeHTML(x.p)}</td><td>${escapeHTML(x.fmt)}</td><td>${escapeHTML(x.store)} · ${euro(x.price)}</td><td>${x.qty}/${escapeHTML(x.period)}</td><td><b>${euro(x.saveWeek)}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`).join("")}</table>`;
-  const w = db.savings.reduce((a,x)=>a + (Number(x.saveWeek)||0), 0);
-  $("savTotal").textContent = `Poupança total estimada:\nSemana: ${euro(w)}\nMês: ${euro(w*4.333)}\nAno: ${euro(w*52)}`;
+  db.savings=db.savings||[];
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Poupança/mês</th><th>Poupança/ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}</td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><b>${euro(x.monthly)}</b></td><td><b>${euro(x.annual)}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Apagar</button></td></tr>`}).join("")}</table>`;
+  const t=savingsTotals();
+  $("savTotal").textContent=`Poupança estimada\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}`;
+  const mensal=num($("roi_monthly")?.value), months=num($("roi_months")?.value), typedTotal=num($("roi_total")?.value), total=typedTotal||(mensal*months);
+  if(!mensal&&!total){ $("roiResult").textContent="Preencha a mensalidade e o prazo para ver o impacto da poupança."; return; }
+  const pct=mensal?Math.min(999,(t.monthly/mensal)*100):0, felt=Math.max(0,mensal-t.monthly), accumulated=t.monthly*months, remaining=Math.max(0,total-accumulated), breakEven=t.monthly>0&&total>0?total/t.monthly:0;
+  $("roiResult").textContent=`Poupança cobre ${pct.toFixed(0)}% da mensalidade\nMensalidade sentida: ${euro(felt)}\nPoupança acumulada em ${months||0} meses: ${euro(accumulated)}\nValor ainda não compensado no fim: ${euro(remaining)}${breakEven?"\nTempo estimado para compensar o total: "+breakEven.toFixed(1)+" meses":""}`;
 }
 function savingsText(){
-  const w = db.savings.reduce((a,x)=>a + (Number(x.saveWeek)||0), 0);
-  return `Resumo de poupança Bimby\n\n${db.savings.map(x=>`${x.p} (${x.fmt}) - ${x.store}: poupa ${euro(x.saveWeek)}/semana`).join("\n")}\n\nTotal estimado:\nSemana: ${euro(w)}\nMês: ${euro(w*4.333)}\nAno: ${euro(w*52)}`;
+  const t=savingsTotals();
+  return `Tachinho — Comprar ou fazer?\n\n${db.savings.map(raw=>{const x=normalizedSaving(raw);return `${x.p}: ${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`}).join("\n")}\n\nPoupança estimada:\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}`;
 }
 function copySavings(){ navigator.clipboard.writeText(savingsText()); alert("Resumo copiado."); }
-function whatsappSavings(){ window.location.href = "https://wa.me/?text=" + encodeURIComponent(savingsText()); }
+function whatsappSavings(){ window.location.href="https://wa.me/?text="+encodeURIComponent(savingsText()); }
 
 /* AGENDA / ESTATÍSTICAS */
 function agendaItems(){
