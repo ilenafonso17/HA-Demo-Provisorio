@@ -406,10 +406,12 @@ function renderSavings(){
   const positiveItems=topSavings().filter(x=>(Number(x.annual)||0)>0);
   const top=positiveItems.slice(0,3);
   const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
-  const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0);
-  const noSaving=zeroItems.length?"\n\nSem poupança nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
+  const extraItems=(db.savings||[]).map(normalizedSaving).filter(x=>(Number(x.extraHomeCost)||0)>0);
+  const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0 && !(Number(x.extraHomeCost)>0));
+  const extraItemsNote=extraItems.length?"\n\nFica mais caro feito em casa nesta comparação: "+extraItems.map(x=>x.p).join(", ")+".":"";
+  const noSaving=zeroItems.length?"\n\nSem diferença nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
   const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano de custo adicional":"sem diferença global"):"";
-  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${extra}${highlights}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
+  $("savTotal").textContent=count?`Poupança estimada · ${count} produto${count===1?"":"s"}\nDia: ${euro(day)}\nSemana: ${euro(week)}\nMês: ${euro(t.monthly)}\nAno: ${euro(t.annual)}${extra}${highlights}${extraItemsNote}${noSaving}`:"Ainda não adicionou produtos a esta simulação.";
   const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
   const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
   if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Existe um valor financeiro inválido. Reveja os números introduzidos."; return; }
