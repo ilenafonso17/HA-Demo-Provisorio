@@ -154,7 +154,7 @@ function initSavings(){
 function loadFormats(){
   const name=$("p_prod").value, p = PRODUCTS[name];
   const usable=canUseHomeCost(p);
-  $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
+  $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");\n  if($("p_period_help")) $("p_period_help").textContent="Ex.: se indicou 2 embalagens e escolher “1 vez por semana”, o Tachinho considera essas 2 embalagens por semana.";
   $("p_unit").value = p.unit;\n  $("p_unit").disabled = true;\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
   $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
   const addBtn=document.querySelector('button[onclick="addSaving()"]');
