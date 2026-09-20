@@ -180,7 +180,7 @@ function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfu
   const consumed=consumedEach*qty;
   const homeCost=(consumed/yieldAmount)*home;
   const marketCost=(price/pack)*consumed;
-  const difference=marketCost-homeCost;
+  const difference=normalizeMoneyZero(marketCost-homeCost);
   return {
     occ,consumed,homeCost,marketCost,difference,
     monthly:Math.max(0,difference)*occ/12,
@@ -189,7 +189,9 @@ function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfu
   };
 }
 
-function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }\nfunction calculatePaymentImpact({netMonthly,monthlyPayment=0,months=0,total=0}){
+function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }\nfunction moneyZero(n){ return Math.abs(Number(n)||0)<0.005; }
+function normalizeMoneyZero(n){ return moneyZero(n)?0:Number(n)||0; }
+\nfunction calculatePaymentImpact({netMonthly,monthlyPayment=0,months=0,total=0}){
   const saving=Math.max(0,Number(netMonthly)||0);
   const payment=Math.max(0,Number(monthlyPayment)||0);
   const validMonths=Number.isInteger(Number(months))&&Number(months)>0;
@@ -357,7 +359,7 @@ function renderSavings(){
   db.savings=db.savings||[];
   $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}<br><span class="small">Usa ${escapeHTML(String(x.qty||1))} embalagem(ns)${Number(x.consumedEach||x.pack)!==Number(x.pack)?" · "+escapeHTML(String(x.consumedEach||""))+" "+escapeHTML(x.unit||"")+" de cada":""}</span></td><td><span class="small">${escapeHTML(simpleConfidenceLabel(x))}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Retirar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
-  const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
+  const netAnnual=normalizeMoneyZero(t.annual-t.extraAnnual), netMonthly=normalizeMoneyZero(t.monthly-t.extraMonthly);
   const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);
   const count=(db.savings||[]).length;
   const positiveItems=topSavings().filter(x=>(Number(x.annual)||0)>0);
@@ -389,7 +391,7 @@ function savingsText(){
   if(!(db.savings||[]).length) return "Tachinho — ainda não adicionou nenhum produto.";
   const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço encontrado":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
-  const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
+  const netAnnual=normalizeMoneyZero(t.annual-(t.extraAnnual||0)), netMonthly=normalizeMoneyZero(t.monthly-(t.extraMonthly||0));
   const netDay=netAnnual/365, netWeek=netAnnual/52;
   const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
   const saldoLabel=t.extraAnnual>0?"No total":"Poupa";
