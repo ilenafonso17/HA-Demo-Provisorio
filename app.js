@@ -175,7 +175,20 @@ function applySelectedReference(){
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
-function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
+function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }\nfunction calculateSavingScenario({price,pack,qty,consumedEach,period,home,yieldAmount}){
+  const occ=yearlyOccurrences(period);
+  const consumed=consumedEach*qty;
+  const homeCost=(consumed/yieldAmount)*home;
+  const marketCost=(price/pack)*consumed;
+  const difference=marketCost-homeCost;
+  return {
+    occ,consumed,homeCost,marketCost,difference,
+    monthly:Math.max(0,difference)*occ/12,
+    annual:Math.max(0,difference)*occ,
+    extraHomeCost:difference<0?Math.abs(difference)*occ:0
+  };
+}
+
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
   if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado"};
@@ -226,7 +239,7 @@ function addSaving(){
   if(!Number.isFinite(consumed) || consumed<=0){ alert("Indique uma quantidade que usa."); return; }
   const homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference);
   const confidence=calculationConfidence(p,priceSource);
-  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:saving*occ/12,annual:saving*occ,extraHomeCost:difference<0?Math.abs(difference)*occ:0});
+  db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:calc.monthly,annual:calc.annual,extraHomeCost:calc.extraHomeCost});
   persist();
   if($("p_consumed")) $("p_consumed").value="";
   if($("p_qty")) $("p_qty").value="1";
