@@ -309,8 +309,8 @@ function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?1
 function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
 function calculationConfidence(p, priceSource){
   if(!canUseHomeCost(p)) return {level:"bloqueado",label:"🔴 Não usar"};
-  if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado · custo caseiro validado + preço real"};
-  if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Atual · custo feito em casa confirmado + preço encontrado"};
+  if(p.status==="validado" && priceSource==="cliente/manual") return {level:"alta",label:"🟢 Confirmado"};
+  if(p.status==="validado" && priceSource==="referência") return {level:"boa",label:"🟢 Atual"};
   return {level:"provisoria",label:"🟡 A confirmar · custo por receita ainda a validar"};
 }
 function validationState(p){
@@ -430,7 +430,7 @@ function renderSavings(){
 function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
-  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço sugerido":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
+  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço que paga":x.priceSource==="referência"?"preço encontrado":"preço usado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
   const netDay=netAnnual/365, netWeek=netAnnual/52;
