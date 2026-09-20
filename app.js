@@ -153,8 +153,13 @@ function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
   const refs=sortReferences(all.filter(x=>x.store===store));
   $("p_ref").innerHTML='<option value="">Preço manual / da cliente</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+euro(r.price)+' · '+escapeHTML(r.format||"")+'</option>').join("");
-  if(refs.length){ $("p_ref").value="0"; applySelectedReference(); }
-  else { $("p_ref").value=""; $("p_brand").value=""; $("p_price").value=""; }
+  $("p_ref").value="";
+  $("p_brand").value="";
+  $("p_price").value="";
+  $("p_packqty").value="";
+  $("p_unit").value=PRODUCTS[name]?.unit||"g";
+  if(refs.length && $("p_ref_help")) $("p_ref_help").textContent="Encontrámos "+refs.length+" preço(s) de referência. Escolha um ou escreva o preço real que a pessoa paga.";
+  else if($("p_ref_help")) $("p_ref_help").textContent=store?"Não temos preço de referência para esta combinação. Escreva o preço real que a pessoa paga.":"Escolha primeiro onde compra.";
 }
 // IMPORTANTE: daqui para a frente, simplificar apenas textos visíveis ao utilizador.
  // Não alterar identificadores internos (priceSource, status, schemaVersion, chaves ou valores usados na lógica).
