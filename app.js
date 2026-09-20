@@ -193,7 +193,7 @@ function sortReferences(refs){
 }
 function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
-  const refs=sortReferences(all.filter(x=>x.store===store && referenceStatus(name,x)==="confirmada"));
+  const refs=referenceFreshness()==="current" ? sortReferences(all.filter(x=>x.store===store && referenceStatus(name,x)==="confirmada")) : [];
   $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+escapeHTML(referencePriceLabel(r))+' · '+escapeHTML(r.format||"")+'</option>').join("");
   $("p_ref").value="";\n  syncBrandVisibility();
   $("p_brand").value="";
@@ -218,7 +218,7 @@ function markManualPrice(){\n  syncBrandVisibility();
   if($("p_ref_help")) $("p_ref_help").textContent="Preço introduzido manualmente — será tratado como o preço real que a pessoa paga.";
 }
 function applySelectedReference(){\n  syncBrandVisibility();
-  const name=$("p_prod").value, store=$("p_store").value, refs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===store && referenceStatus(name,x)==="confirmada"));
+  const name=$("p_prod").value, store=$("p_store").value, refs=referenceFreshness()==="current" ? sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===store && referenceStatus(name,x)==="confirmada")) : [];
   const idx=$("p_ref").value;
   if(idx==="") return;
   const r=refs[Number(idx)];
@@ -437,7 +437,7 @@ function addSaving(){
   const partialRaw=$("p_use_all")?.value==="no" ? String($("p_consumed")?.value||"").trim() : "";
   const consumedEach=partialRaw==="" ? pack : parseNumber(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
-  const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value && referenceStatus(name,x)==="confirmada"));
+  const matchingRefs=referenceFreshness()==="current" ? sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value && referenceStatus(name,x)==="confirmada")) : [];
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   // Validar primeiro; só depois procurar duplicados, para não mostrar avisos confusos com campos incompletos.
