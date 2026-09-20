@@ -201,7 +201,16 @@ function loadReferenceOptions(){
   $("p_packqty").value="";
   $("p_unit").value=PRODUCTS[name]?.unit||"g";\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(PRODUCTS[name]?.unit||"g");
   if(refs.length && $("p_ref_help")) $("p_ref_help").textContent="Encontrámos "+refs.length+" preço(s) de referência. Escolha um ou escreva o preço real que a pessoa paga.";
-  else if($("p_ref_help")) $("p_ref_help").textContent=store?"Ainda não temos um preço de referência confirmado para esta combinação. Escreva o preço real que a pessoa paga.":"Escolha primeiro onde compra.";
+  else if($("p_ref_help")){
+    const freshness=referenceFreshness();
+    $("p_ref_help").textContent=!store
+      ?"Escolha primeiro onde compra."
+      :freshness==="expired"
+        ?"Os preços encontrados precisam de ser atualizados. Por agora, escreva o preço real que a pessoa paga."
+        :freshness==="invalid"
+          ?"Os preços encontrados não estão disponíveis neste momento. Escreva o preço real que a pessoa paga."
+          :"Ainda não temos um preço de referência confirmado para esta combinação. Escreva o preço real que a pessoa paga.";
+  }
 }
 // IMPORTANTE: daqui para a frente, simplificar apenas textos visíveis ao utilizador.
  // Não alterar identificadores internos (priceSource, status, schemaVersion, chaves ou valores usados na lógica).
