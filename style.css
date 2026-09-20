@@ -44,3 +44,25 @@ th{background:#f0f8f3}
 .timeline div{margin:8px 0}
 .footer{text-align:center;color:var(--muted);font-size:13px;padding:22px}
 @media(max-width:1000px){.grid,.grid3,.grid4,.grid5{grid-template-columns:1fr}.hero h1{font-size:28px}.app{padding:10px}.hero{border-radius:22px;padding:22px}}
+
+.tachinho-only{text-align:center;padding:18px 8px 6px}
+.tachinho-only h1{margin:0 0 6px;font-size:36px;color:var(--dark)}
+.tachinho-only p{margin:0;color:var(--muted);font-size:18px}
+.tachinho-inside-title{display:none}
+.tachinho-headline{margin:14px 0;background:#e9f8ef;border:2px solid #9fd9b7;font-size:22px;font-weight:900;color:var(--dark);text-align:center;padding:20px}
+button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+@media(max-width:700px){
+  .app{padding:8px}
+  .tachinho-only{padding:12px 4px 2px}
+  .tachinho-only h1{font-size:30px}
+  .tachinho-only p{font-size:16px}
+  .card{border-radius:18px;padding:14px;margin:12px 0}
+  .grid3{gap:10px}
+  input,select,textarea{font-size:16px;padding:12px}
+  button,.btn{width:100%;min-height:46px}
+  .row{display:grid;grid-template-columns:1fr;gap:8px}
+  .tachinho-headline{font-size:19px;padding:16px}
+  #savList{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #savList table{min-width:820px}
+  th,td{padding:9px;font-size:14px}
+}
