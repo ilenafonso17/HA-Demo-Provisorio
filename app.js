@@ -41,7 +41,7 @@ const PRODUCTS = {
   "Iogurte líquido": {home:null, yield:null, unit:"ml", label:"a validar", status:"a validar", periods:["dia","semana","mês"]},
   "Requeijão": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
   "Pão de massa mãe": {home:0.45, yield:620, unit:"g", label:"620 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão de água com massa-mãe (620 g); cálculo mínimo com 650 g farinha T65 a 0,69 €/kg; água/sal/azeite residual e manutenção da massa-mãe devem ser afinados", periods:["semana","mês"]},
-  "Pão de Mafra": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]},
+  "Pão de Mafra": {home:0.43, yield:650, unit:"g", label:"650 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão de Mafra com massa-mãe (650 g): 550 g farinha T65 + 50 g farinha de centeio + 50 g isco; base mínima calculada com T65 a 0,69 €/kg, restante custo a afinar", periods:["semana","mês"]},
   "Pão alentejano": {home:0.43, yield:750, unit:"g", label:"750 g", status:"calculado por receita — a validar", source:"Cookidoo · Pão alentejano (750 g); farinha T65 e fermento com preços de referência de 20/09/2026", periods:["semana","mês"]}
 };
 
