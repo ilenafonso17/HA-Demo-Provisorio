@@ -438,8 +438,9 @@ function renderSavings(){
   const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
   const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
   if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Há um valor que não está certo. Confirme os números."; return; }
-  const calculatedTotal=mensal>0&&Number.isInteger(months)&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
   if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Os valores não podem ser negativos."; return; }
+  if(months>0 && !Number.isInteger(months)){ $("roiResult").textContent="O número de meses tem de ser um número inteiro."; return; }
+  const calculatedTotal=mensal>0&&months>0?mensal*months:0, total=typedTotal||calculatedTotal;
   if(!mensal&&!total){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
   const roiMonthly=Math.max(0,netMonthly), pct=mensal?(roiMonthly/mensal)*100:0, felt=Math.max(0,mensal-roiMonthly), accumulated=roiMonthly*months, remaining=Math.max(0,total-accumulated), breakEven=roiMonthly>0&&total>0?total/roiMonthly:0;
   const validMonths=Number.isInteger(months)&&months>0;
