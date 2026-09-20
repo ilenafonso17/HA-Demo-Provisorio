@@ -162,8 +162,12 @@ function initSavings(){
 function loadFormats(){
   const name=$("p_prod").value, p = PRODUCTS[name];
   const usable=canUseHomeCost(p);
-  $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");\n  if($("p_period_help")) $("p_period_help").textContent="Ex.: se indicou 2 embalagens e escolher “1 vez por semana”, o Tachinho considera essas 2 embalagens por semana.";
-  $("p_unit").value = p.unit;\n  $("p_unit").disabled = false;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(p.unit);\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
+  $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
+  if($("p_period_help")) $("p_period_help").textContent="Ex.: se indicou 2 embalagens e escolher “1 vez por semana”, o Tachinho considera essas 2 embalagens por semana.";
+  $("p_unit").value = p.unit;
+  $("p_unit").disabled = false;
+  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(p.unit);
+  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
   if($("p_pack_label")) $("p_pack_label").textContent=p.unit==="g"?"Quantos g traz 1 embalagem?":p.unit==="ml"?"Quantos ml traz 1 embalagem?":"Quantas unidades traz 1 embalagem?";
   if($("p_pack_help")) $("p_pack_help").textContent=p.unit==="g"?"Ex.: embalagem de 500 g → escreva 500.":p.unit==="ml"?"Ex.: embalagem de 1 L → escreva 1000 ml.":"Ex.: pack com 8 iogurtes → escreva 8.";
   if($("p_consumed_label")) $("p_consumed_label").textContent=p.unit==="g"?"Quantos g usa de cada embalagem?":p.unit==="ml"?"Quantos ml usa de cada embalagem?":"Quantas unidades usa de cada embalagem?";
@@ -195,11 +199,13 @@ function loadReferenceOptions(){
   const name=$("p_prod").value, all=db.prices?.references?.[name]||[], store=$("p_store").value;
   const refs=referenceFreshness()==="current" ? sortReferences(all.filter(x=>x.store===store && referenceStatus(name,x)==="confirmada")) : [];
   $("p_ref").innerHTML='<option value="">Não usar referência</option>'+refs.map((r,i)=>'<option value="'+i+'">'+escapeHTML(r.brand||r.store)+' · '+escapeHTML(referencePriceLabel(r))+' · '+escapeHTML(r.format||"")+'</option>').join("");
-  $("p_ref").value="";\n  syncBrandVisibility();
+  $("p_ref").value="";
+  syncBrandVisibility();
   $("p_brand").value="";
   $("p_price").value="";
   $("p_packqty").value="";
-  $("p_unit").value=PRODUCTS[name]?.unit||"g";\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(PRODUCTS[name]?.unit||"g");
+  $("p_unit").value=PRODUCTS[name]?.unit||"g";
+  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(PRODUCTS[name]?.unit||"g");
   if(refs.length && $("p_ref_help")) $("p_ref_help").textContent="Encontrámos "+refs.length+" preço(s) de referência. Escolha um ou escreva o preço real que a pessoa paga.";
   else if($("p_ref_help")){
     const freshness=referenceFreshness();
@@ -221,12 +227,14 @@ function syncBrandVisibility(){
   wrap.hidden=!hasReference;
   if(!hasReference && $("p_brand")) $("p_brand").value="";
 }
-function markManualPrice(){\n  syncBrandVisibility();
+function markManualPrice(){
+  syncBrandVisibility();
   if($("p_ref")) $("p_ref").value="";
   if($("p_brand") && !$("p_brand").value.trim()) $("p_brand").placeholder="Opcional — pode indicar a marca da cliente";
   if($("p_ref_help")) $("p_ref_help").textContent="Preço introduzido manualmente — será tratado como o preço real que a pessoa paga.";
 }
-function applySelectedReference(){\n  syncBrandVisibility();
+function applySelectedReference(){
+  syncBrandVisibility();
   const name=$("p_prod").value, store=$("p_store").value, refs=referenceFreshness()==="current" ? sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===store && referenceStatus(name,x)==="confirmada")) : [];
   const idx=$("p_ref").value;
   if(idx==="") return;
@@ -235,7 +243,8 @@ function applySelectedReference(){\n  syncBrandVisibility();
   $("p_brand").value=r.brand||"";
   $("p_price").value=r.price;
   $("p_packqty").value=r.pack;
-  $("p_unit").value=r.unit;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(r.unit);
+  $("p_unit").value=r.unit;
+  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(r.unit);
   if($("p_ref_help")) $("p_ref_help").textContent="Preço de referência selecionado: "+(r.store||store)+" · "+(r.brand||"")+" · "+referencePriceLabel(r)+" · "+(r.format||"");
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
@@ -257,7 +266,8 @@ function unitGuidance(productUnit){
     :productUnit==="g"
       ?"Neste produto compare por gramas. Ex.: embalagem de 500 g → embalagem = 500 g."
       :"Neste produto compare por mililitros. Ex.: embalagem de 1 L → embalagem = 1000 ml.";
-}\nfunction calculateSavingScenario({price,pack,qty,consumedEach,period,home,yieldAmount}){
+}
+function calculateSavingScenario({price,pack,qty,consumedEach,period,home,yieldAmount}){
   const occ=yearlyOccurrences(period);
   const consumed=consumedEach*qty;
   const homeCost=(consumed/yieldAmount)*home;
@@ -271,9 +281,11 @@ function unitGuidance(productUnit){
   };
 }
 
-function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }\nfunction moneyZero(n){ return Math.abs(Number(n)||0)<0.005; }
+function nearlyEqual(a,b,epsilon=1e-9){ return Math.abs(a-b)<=epsilon; }
+function moneyZero(n){ return Math.abs(Number(n)||0)<0.005; }
 function normalizeMoneyZero(n){ return moneyZero(n)?0:Number(n)||0; }
-\nfunction calculatePaymentImpact({netMonthly,monthlyPayment=0,months=0,total=0}){
+
+function calculatePaymentImpact({netMonthly,monthlyPayment=0,months=0,total=0}){
   const saving=Math.max(0,Number(netMonthly)||0);
   const payment=Math.max(0,Number(monthlyPayment)||0);
   const validMonths=Number.isInteger(Number(months))&&Number(months)>0;
@@ -385,7 +397,9 @@ function auditProductData(){
     }
   }
   if(issues.length) console.error("Tachinho: problemas nos dados dos produtos:",issues);
-  else console.info("Tachinho: estrutura dos produtos validados OK.");\n  const pending=pendingHomeCostProducts();\n  if(pending.length) console.info("Tachinho: custos caseiros ainda bloqueados/por validar:",pending);
+  else console.info("Tachinho: estrutura dos produtos validados OK.");
+  const pending=pendingHomeCostProducts();
+  if(pending.length) console.info("Tachinho: custos caseiros ainda bloqueados/por validar:",pending);
   return issues;
 }
 
@@ -411,7 +425,9 @@ function auditReferenceData(){
       if(!Number.isFinite(Number(r.price)) || Number(r.price)<=0) issues.push(id+" · preço inválido");
       if(!Number.isFinite(Number(r.pack)) || Number(r.pack)<=0) issues.push(id+" · quantidade inválida");
       if(!["g","ml","un"].includes(r.unit)) issues.push(id+" · unidade inválida");
-      if(!String(r.format||"").trim()) issues.push(id+" · formato não descrito");\n      if(r.promoPrice!=null && (!Number.isFinite(Number(r.promoPrice)) || Number(r.promoPrice)<=0)) issues.push(id+" · promoção inválida");\n      if(r.promoPrice!=null && Number(r.promoPrice)>=Number(r.price)) issues.push(id+" · promoção não é inferior ao preço normal");
+      if(!String(r.format||"").trim()) issues.push(id+" · formato não descrito");
+      if(r.promoPrice!=null && (!Number.isFinite(Number(r.promoPrice)) || Number(r.promoPrice)<=0)) issues.push(id+" · promoção inválida");
+      if(r.promoPrice!=null && Number(r.promoPrice)>=Number(r.price)) issues.push(id+" · promoção não é inferior ao preço normal");
       if(!compatibleUnit(p.unit,r.unit)) issues.push(id+" · unidade incompatível com "+productName+" (fica bloqueada)");
     });
   }
@@ -489,7 +505,8 @@ Quer adicionar esta também?")) return;
   if(!occ){ alert("Escolha com que frequência usa este produto."); return; }
   const consumed=consumedEach*qty;
   if(!Number.isFinite(consumed) || consumed<=0){ alert("Indique uma quantidade que usa."); return; }
-  const calc=calculateSavingScenario({price,pack,qty,consumedEach,period,home:p.home,yieldAmount:p.yield});\n  const {homeCost,marketCost,difference}=calc;
+  const calc=calculateSavingScenario({price,pack,qty,consumedEach,period,home:p.home,yieldAmount:p.yield});
+  const {homeCost,marketCost,difference}=calc;
   const confidence=calculationConfidence(p,priceSource);
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:calc.monthly,annual:calc.annual,extraHomeCost:calc.extraHomeCost});
   persist();
@@ -498,7 +515,9 @@ Quer adicionar esta também?")) return;
     $("add_feedback").textContent="✓ "+name+" adicionado. "+result;
   }
   if($("savHeadline")) $("savHeadline").scrollIntoView({behavior:"smooth",block:"center"});
-  if($("p_consumed")) $("p_consumed").value="";\n  if($("p_use_all")) $("p_use_all").value="yes";\n  togglePartialUse();
+  if($("p_consumed")) $("p_consumed").value="";
+  if($("p_use_all")) $("p_use_all").value="yes";
+  togglePartialUse();
   if($("p_qty")) $("p_qty").value="1";
   renderSavings();
   renderPayment();
@@ -608,7 +627,8 @@ function renderSavings(){
   }).join("")+'</div>';
   const t=savingsTotals();
   const netAnnual=normalizeMoneyZero(t.annual-t.extraAnnual), netMonthly=normalizeMoneyZero(t.monthly-t.extraMonthly);
-  const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);\n  const headline=$("savHeadline");
+  const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);
+  const headline=$("savHeadline");
   if(headline){
     headline.textContent=!db.savings.length
       ?"Adicione produtos para descobrir a poupança."
