@@ -458,8 +458,8 @@ function renderSavings(){
   $("savList").innerHTML = '<div class="savings-cards">'+db.savings.map(raw=>{
     const x=normalizedSaving(raw);
     const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";
-    const month=Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?euro(Number(x.extraHomeCost)/12)+" a mais":"Sem diferença";
-    const year=Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?euro(Number(x.extraHomeCost))+" a mais":"Sem diferença";
+    const month=Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?euro(Number(x.extraMonthly)||0)+" a mais":"Sem diferença";
+    const year=Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?euro(Number(x.extraAnnual)||0)+" a mais":"Sem diferença";
     const habit=periodLabel(x.period||"semana")+(Number(x.consumedEach||x.pack)!==Number(x.pack)?" · usa "+String(x.consumedEach||"")+" "+String(x.unit||"")+" de cada embalagem":"");
     return `<article class="saving-card"><div class="saving-card-head"><div><b>${escapeHTML(x.p||"")}</b>${x.brand?'<div class="small">'+escapeHTML(x.brand)+'</div>':""}</div><button class="danger compact" onclick="removeSaving('${x.id}')">Retirar</button></div><div class="saving-main"><span><small>Por mês</small><strong>${month}</strong></span><span><small>Por ano</small><strong>${year}</strong></span></div><div class="small">${escapeHTML(x.store||"")}${x.store?" · ":""}${euro(x.price)} · ${escapeHTML(src)}</div><div class="small">${escapeHTML(habit)} · ${escapeHTML(simpleConfidenceLabel(x))}</div></article>`;
   }).join("")+'</div>';
@@ -491,7 +491,7 @@ function renderSavings(){
   if(!Number.isFinite(mensal)||!Number.isFinite(months)||!Number.isFinite(typedTotal)){ $("roiResult").textContent="Há um valor que não está certo. Confirme os números."; return; }
   if(mensal<0||months<0||typedTotal<0){ $("roiResult").textContent="Os valores não podem ser negativos."; return; }
   if(months>0 && !Number.isInteger(months)){ $("roiResult").textContent="O número de meses tem de ser um número inteiro."; return; }
-  if(!mensal&&!typedTotal){ $("roiResult").textContent="Indique a mensalidade e o número de meses para ver quanto a poupança ajuda."; return; }
+  if(!mensal&&!typedTotal){ $("roiResult").textContent=""; return; }
   const impact=calculatePaymentImpact({netMonthly,monthlyPayment:mensal,months,total:typedTotal});
   const roiMonthly=impact.saving, pct=impact.percent, felt=impact.missingPerMonth, validMonths=impact.months>0;
   const accumulated=impact.accumulated, remaining=impact.remaining, breakEven=impact.breakEvenMonths, total=impact.total;
@@ -507,7 +507,7 @@ function savingsText(){
   const lines=db.savings.map(raw=>{
     const x=normalizedSaving(raw);
     if((Number(x.annual)||0)>0) return "• "+x.p+": "+euro(x.monthly)+"/mês · "+euro(x.annual)+"/ano";
-    if(Number(x.extraHomeCost)>0) return "• "+x.p+": fazer em casa fica mais caro nesta comparação";
+    if(Number(x.extraHomeCost)>0) return "• "+x.p+": "+euro(Number(x.extraMonthly)||0)+"/mês · "+euro(Number(x.extraAnnual)||0)+"/ano a mais";
     return "• "+x.p+": sem diferença nesta comparação";
   }).join("\n");
   const netAnnual=normalizeMoneyZero(t.annual-(t.extraAnnual||0));
