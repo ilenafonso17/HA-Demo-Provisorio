@@ -273,6 +273,19 @@ function runMathSelfTests(){
       if(!nearlyEqual(Number(got[key]),Number(value))) failures.push(name+" · "+key);
     }
   }
+  const parseCases=[
+    ["vírgula decimal","1,5",1.5],
+    ["ponto decimal","1.5",1.5],
+    ["zero","0",0],
+    ["negativo","-2",-2],
+    ["espaços"," 2,50 ",2.5]
+  ];
+  for(const [name,input,expected] of parseCases){
+    const got=parseNumber(input);
+    if(!nearlyEqual(Number(got),Number(expected))) failures.push("leitura "+name);
+  }
+  if(!Number.isNaN(parseNumber(""))) failures.push("campo vazio");
+  if(!Number.isNaN(parseNumber("abc"))) failures.push("texto inválido");
   const paymentCases=[
     ["mensalidade parcial",{netMonthly:30,monthlyPayment:50,months:12,total:600},{percent:60,missingPerMonth:20,surplusPerMonth:0,accumulated:360,remaining:240,breakEvenMonths:20}],
     ["mensalidade 100%",{netMonthly:50,monthlyPayment:50,months:12,total:600},{percent:100,missingPerMonth:0,surplusPerMonth:0,accumulated:600,remaining:0,breakEvenMonths:12}],
@@ -287,7 +300,7 @@ function runMathSelfTests(){
     }
   }
   if(failures.length) console.error("Tachinho: falharam testes matemáticos:",failures);
-  else console.info("Tachinho: testes matemáticos essenciais OK ("+(cases.length+paymentCases.length)+").");
+  else console.info("Tachinho: testes matemáticos essenciais OK ("+(cases.length+parseCases.length+2+paymentCases.length)+").");
   return failures;
 }
 
@@ -317,8 +330,11 @@ function addSaving(){
   const priceRaw=String($("p_price").value||"").trim(), packRaw=String($("p_packqty").value||"").trim(), qtyRaw=String($("p_qty").value||"").trim();
   if(priceRaw==="" || packRaw==="" || qtyRaw===""){ alert("Preencha o preço, o tamanho da embalagem e quantas embalagens usa."); return; }
   if(!Number.isFinite(price)||!Number.isFinite(pack)||!Number.isFinite(qty)||!Number.isFinite(consumedEach)){ alert("Há um valor que não está certo. Confirme os números."); return; }
+  if(price<=0){ alert("O preço tem de ser superior a zero."); return; }
+  if(pack<=0){ alert("O tamanho da embalagem tem de ser superior a zero."); return; }
+  if(qty<=0){ alert("A quantidade de embalagens tem de ser superior a zero."); return; }
   if(consumedEach>pack){ alert("Não pode usar mais do que a embalagem traz."); return; }
-  if(consumedEach<=0){ alert("Indique quanto usa."); return; }
+  if(consumedEach<=0){ alert("Indique quanto usa. O valor tem de ser superior a zero."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use "+unitLabel(p.unit)+"."); return; }
   if(!canUseHomeCost(p)){ alert("Ainda estamos a confirmar quanto custa fazer este produto em casa. Por enquanto, não o vamos usar."); return; }
   const duplicate=(db.savings||[]).find(x=>x.p===name && x.store===$("p_store").value && String(x.brand||"").trim().toLocaleLowerCase("pt")===String($("p_brand").value||"").trim().toLocaleLowerCase("pt") && Math.abs(Number(x.price)-price)<0.001 && Number(x.pack)===pack && x.unit===$("p_unit").value && Number(x.qty)===qty && x.period===period && Number(x.consumedEach||x.pack)===Number(consumedEach));
