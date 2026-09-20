@@ -471,7 +471,7 @@ function addSaving(){
   if(!occ){ alert("Escolha com que frequência usa este produto."); return; }
   const consumed=consumedEach*qty;
   if(!Number.isFinite(consumed) || consumed<=0){ alert("Indique uma quantidade que usa."); return; }
-  const homeCost=(consumed/p.yield)*p.home, marketCost=(price/pack)*consumed, difference=marketCost-homeCost, saving=Math.max(0,difference);
+  const calc=calculateSavingScenario({price,pack,qty,consumedEach,period,home:p.home,yieldAmount:p.yield});\n  const {homeCost,marketCost,difference}=calc;
   const confidence=calculationConfidence(p,priceSource);
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:calc.monthly,annual:calc.annual,extraHomeCost:calc.extraHomeCost});
   persist();
