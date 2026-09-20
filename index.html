@@ -103,7 +103,7 @@
         <div><label>Supermercado / origem</label><select id="p_store" onchange="loadReferenceOptions()"><option>Aldi</option><option>Auchan</option><option>Continente</option><option>Intermarché</option><option>Lidl</option><option>Mercadona</option><option>Pingo Doce</option><option>Outro</option><option>Pizzaria</option></select></div>
         <div><label>Referência disponível</label><select id="p_ref" onchange="applySelectedReference()"><option value="">Preço manual</option></select></div>
         <div><label>Marca (opcional)</label><input id="p_brand" placeholder="Marca branca, marca conhecida..."></div>
-        <div><label>Preço da cliente / preço pago (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode substituir a referência"></div>
+        <div><label>Preço da cliente / preço pago (€)</label><input id="p_price" inputmode="decimal" placeholder="Pode substituir a referência" oninput="markManualPrice()"></div>
         <div><label>Quantidade da embalagem</label><input id="p_packqty" inputmode="decimal" value="1"></div>
         <div><label>Quanto consome de cada embalagem?</label><input id="p_consumed" inputmode="decimal" placeholder="Vazio = embalagem inteira"></div>
         <div><label>Unidade</label><select id="p_unit"><option value="g">g</option><option value="ml">ml</option><option value="un">unidades</option></select></div>
