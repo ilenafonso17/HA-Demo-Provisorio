@@ -1,7 +1,7 @@
 
 const APP_MODE = "tachinho";
 const APP_TITLE = "Tachinho — Comprar ou fazer?";
-const KEY = "tachinho_v1";
+const KEY = "tachinho_config_v1";
 
 const PRODUCTS = {
   "Iogurte sólido": {home:1.01, yield:8, unit:"un", label:"8 unidades", status:"validado", periods:["dia","semana","mês"]},
@@ -97,19 +97,23 @@ function defaultPrices(){
 let db = loadDB();
 
 function loadDB(){
+  let prices=defaultPrices();
   try{
     const raw=localStorage.getItem(KEY);
     if(raw){
       const data=JSON.parse(raw);
-      if(!data.schemaVersion) data.schemaVersion=1;
-      if(!data.prices || !data.prices.references) data.prices=defaultPrices();
-      data.savings=Array.isArray(data.savings)?data.savings:[];
-      return {schemaVersion:2,savings:data.savings,prices:data.prices,lastSavedAt:data.lastSavedAt||""};
+      if(data.prices?.references) prices=data.prices;
     }
+    localStorage.removeItem("tachinho_v1");
   }catch(e){}
-  return {schemaVersion:2,savings:[],prices:defaultPrices()};
+  return {schemaVersion:3,savings:[],prices};
 }
-function persist(){ db.schemaVersion=2; db.lastSavedAt=new Date().toISOString(); localStorage.setItem(KEY, JSON.stringify(db)); renderAll(); }
+function persist(){
+  db.schemaVersion=3;
+  db.lastSavedAt=new Date().toISOString();
+  localStorage.setItem(KEY,JSON.stringify({schemaVersion:3,prices:db.prices,lastSavedAt:db.lastSavedAt}));
+  renderAll();
+}
 function euro(n){ return (Number(n)||0).toLocaleString("pt-PT",{style:"currency",currency:"EUR"}); }
 function parseNumber(v){
   const raw=String(v??"").trim().replace(/\s/g,"").replace(",",".");
