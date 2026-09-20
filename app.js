@@ -316,9 +316,14 @@ function validationState(p){
   return "provisional";
 }
 function canUseHomeCost(p){ return validationState(p)==="validated"; }
+function togglePartialUse(){
+  const partial=$("p_use_all")?.value==="no";
+  if($("p_partial_wrap")) $("p_partial_wrap").hidden=!partial;
+  if(!partial && $("p_consumed")) $("p_consumed").value="";
+}
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=parseNumber($("p_price").value), pack=parseNumber($("p_packqty").value), qty=parseNumber($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
-  const partialRaw=String($("p_consumed")?.value||"").trim();
+  const partialRaw=$("p_use_all")?.value==="no" ? String($("p_consumed")?.value||"").trim() : "";
   const consumedEach=partialRaw==="" ? pack : parseNumber(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
@@ -359,7 +364,7 @@ function addSaving(){
   const confidence=calculationConfidence(p,priceSource);
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:calc.monthly,annual:calc.annual,extraHomeCost:calc.extraHomeCost});
   persist();
-  if($("p_consumed")) $("p_consumed").value="";
+  if($("p_consumed")) $("p_consumed").value="";\n  if($("p_use_all")) $("p_use_all").value="yes";\n  togglePartialUse();
   if($("p_qty")) $("p_qty").value="1";
   if($("p_prod")) $("p_prod").focus();
   const added=(db.savings||[]).length;
