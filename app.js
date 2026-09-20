@@ -339,7 +339,7 @@ function addSaving(){
   const partialRaw=$("p_use_all")?.value==="no" ? String($("p_consumed")?.value||"").trim() : "";
   const consumedEach=partialRaw==="" ? pack : parseNumber(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
-  const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
+  const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value && compatibleUnit(p?.unit,x.unit)));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
   const priceSource=selectedRef && Math.abs(price-Number(selectedRef.price))<0.001 ? "referência" : "cliente/manual";
   // Validar primeiro; só depois procurar duplicados, para não mostrar avisos confusos com campos incompletos.
@@ -377,14 +377,13 @@ function addSaving(){
   const confidence=calculationConfidence(p,priceSource);
   db.savings.push({id:Date.now(),p:name,store:$("p_store").value,brand:$("p_brand").value.trim(),price,priceSource,confidence:confidence.label,confidenceLevel:confidence.level,referenceUpdatedAt:priceSource==="referência"?(db.prices?.updatedAt||""):"",pack,consumedEach,consumed,unit,qty,period,homeCost,marketCost,difference,monthly:calc.monthly,annual:calc.annual,extraHomeCost:calc.extraHomeCost});
   persist();
+  if($("add_feedback")){
+    const result=calc.difference>0 ? "Poupa cerca de "+euro(calc.monthly)+" por mês." : calc.difference<0 ? "Neste caso, fazer em casa fica "+euro(calc.extraHomeCost)+" mais caro por utilização." : "Neste caso, os custos ficam praticamente iguais.";
+    $("add_feedback").textContent="✓ "+name+" adicionado. "+result;
+  }
+  if($("savHeadline")) $("savHeadline").scrollIntoView({behavior:"smooth",block:"center"});
   if($("p_consumed")) $("p_consumed").value="";\n  if($("p_use_all")) $("p_use_all").value="yes";\n  togglePartialUse();
   if($("p_qty")) $("p_qty").value="1";
-  if($("p_prod")) $("p_prod").focus();
-  const added=(db.savings||[]).length;
-  if(added===1 && !sessionStorage.getItem("tachinho_first_add_tip")){
-    sessionStorage.setItem("tachinho_first_add_tip","1");
-    alert("Produto adicionado. Agora pode escolher outro ou ver o resumo.");
-  }
 }
 function removeSaving(id){
   const item=(db.savings||[]).find(x=>String(x.id)===String(id));
