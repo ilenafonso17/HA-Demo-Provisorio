@@ -158,6 +158,8 @@ function loadFormats(){
   $("p_unit").value = p.unit;\n  $("p_unit").disabled = false;\n  if($("p_unit_display")) $("p_unit_display").textContent=unitLabel(p.unit);\n  if($("p_unit_help")) $("p_unit_help").textContent=unitGuidance(p.unit);
   if($("p_pack_label")) $("p_pack_label").textContent=p.unit==="g"?"Quantos g traz 1 embalagem?":p.unit==="ml"?"Quantos ml traz 1 embalagem?":"Quantas unidades traz 1 embalagem?";
   if($("p_pack_help")) $("p_pack_help").textContent=p.unit==="g"?"Ex.: embalagem de 500 g → escreva 500.":p.unit==="ml"?"Ex.: embalagem de 1 L → escreva 1000 ml.":"Ex.: pack com 8 iogurtes → escreva 8.";
+  if($("p_consumed_label")) $("p_consumed_label").textContent=p.unit==="g"?"Quantos g usa de cada embalagem?":p.unit==="ml"?"Quantos ml usa de cada embalagem?":"Quantas unidades usa de cada embalagem?";
+  if($("p_consumed_help")) $("p_consumed_help").textContent=p.unit==="g"?"Ex.: embalagem de 500 g e usa metade → escreva 250.":p.unit==="ml"?"Ex.: embalagem de 1000 ml e usa metade → escreva 500.":"Ex.: pack com 8 unidades e usa 4 → escreva 4.";
   $("p_home").value = usable ? euro(p.home)+" / "+p.label : "A validar — não entra na conta";
   const addBtn=document.querySelector('button[onclick="addSaving()"]');
   if(addBtn){ addBtn.disabled=!usable; addBtn.title=usable?"":"Este produto ainda não tem o custo de fazer em casa validado."; }
