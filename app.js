@@ -321,7 +321,8 @@ function validationState(p){
 function canUseHomeCost(p){ return validationState(p)==="validated"; }
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
-  const consumedEach=num($("p_consumed")?.value)||pack;
+  const partialRaw=String($("p_consumed")?.value||"").trim();
+  const consumedEach=partialRaw==="" ? pack : num(partialRaw);
   const refIdx=$("p_ref") ? $("p_ref").value : "";
   const matchingRefs=sortReferences((db.prices?.references?.[name]||[]).filter(x=>x.store===$("p_store").value));
   const selectedRef=refIdx!=="" ? matchingRefs[Number(refIdx)] : null;
