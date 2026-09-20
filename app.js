@@ -258,7 +258,7 @@ function loadFormats(){
   const refs=db.prices?.references?.[name]||[];
   const review=db.prices?.reviewAfter||"";
   const stale=review && new Date().toISOString().slice(0,10)>=review;
-  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
+  $("p_note").textContent = !canUseHomeCost(p) ? "Este custo feito em casa ainda não está suficientemente validado e não será usado no cálculo. "+(p.source||"") : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+(p.source?" · Base: "+p.source:"")+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+". O preço real da cliente prevalece sempre.":" Introduza o preço que a pessoa paga.");
   loadReferenceOptions();
 }
 function loadReferenceOptions(){
@@ -281,10 +281,11 @@ function applySelectedReference(){
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
-function compatibleUnit(productUnit, chosen){ return productUnit===chosen; }
+function compatibleUnit(productUnit, chosen){ return productUnit===chosen || (productUnit==="g" && chosen==="ml") || (productUnit==="ml" && chosen==="g"); }
+function canUseHomeCost(p){ return p.home!=null && !String(p.status||"").includes("não usar"); }
 function addSaving(){
   const name=$("p_prod").value, p=PRODUCTS[name], price=num($("p_price").value), pack=num($("p_packqty").value), qty=num($("p_qty").value), unit=$("p_unit").value, period=$("p_period").value;
-  if(p.home==null){ alert("O custo feito em casa deste produto ainda está a validar."); return; }
+  if(!canUseHomeCost(p)){ alert("O custo feito em casa deste produto ainda não está suficientemente validado para ser usado numa comparação com a cliente."); return; }
   if(!price||!pack||!qty){ alert("Preencha o preço, a quantidade da embalagem e a quantidade consumida."); return; }
   if(!compatibleUnit(p.unit,unit)){ alert("Para este produto use a unidade "+(p.unit==="un"?"unidades":p.unit)+"."); return; }
   const consumed=pack*qty, homeCost=(consumed/p.yield)*p.home, marketCost=price*qty, saving=Math.max(0,marketCost-homeCost), occ=yearlyOccurrences(period);
