@@ -341,7 +341,7 @@ function addSaving(){
     const anteriores=(db.savings||[]).filter(x=>x.p===name);
     const resumo=anteriores.slice(0,3).map(x=>{
       const origem=[x.store,x.brand].filter(Boolean).join(" · ")||"sem origem/marca";
-      return "• "+origem+" · "+money(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"");
+      return "• "+origem+" · "+money(Number(x.price)||0)+" / "+(Number(x.pack)||0)+" "+(x.unit||"")+" · usa "+(Number(x.qty)||0)+" embalagem(ns)";
     }).join("\n");
     const restantes=Math.max(0,anteriores.length-3);
     const mais=restantes ? "\n• + "+restantes+" comparação"+(restantes===1?"":"ões")+" anterior"+(restantes===1?"":"es") : "";
@@ -417,7 +417,7 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}</td><td><span class="small">${escapeHTML(simpleConfidenceLabel(x))}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Retirar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}<br><span class="small">Usa ${escapeHTML(String(x.qty||1))} embalagem(ns)${Number(x.consumedEach||x.pack)!==Number(x.pack)?" · "+escapeHTML(String(x.consumedEach||""))+" "+escapeHTML(x.unit||"")+" de cada":""}</span></td><td><span class="small">${escapeHTML(simpleConfidenceLabel(x))}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Retirar</button></td></tr>`}).join("")}</table>`;
   const t=savingsTotals();
   const netAnnual=t.annual-t.extraAnnual, netMonthly=t.monthly-t.extraMonthly;
   const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);
