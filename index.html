@@ -15,7 +15,13 @@
 </style>
 </head>
 <body>
-<script>if(new URLSearchParams(location.search).get("tachinho")==="1") document.documentElement.classList.add("tachinho-mode");</script>
+<script>
+const tachinhoStandalone=new URLSearchParams(location.search).get("tachinho")==="1";
+if(tachinhoStandalone){
+  document.documentElement.classList.add("tachinho-mode");
+  document.title="Tachinho — Comprar ou fazer?";
+}
+</script>
 <div class="app">
   <div class="hero smartpro-hero">
     <h1>🌿 Smart Pro Agente</h1>
