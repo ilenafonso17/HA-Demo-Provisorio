@@ -41,8 +41,8 @@ function defaultPrices(){
     references:{
       "Iogurte sólido":[
         {store:"Continente",brand:"Continente Natural",price:1.39,pack:8,unit:"un",format:"8 × 125 g",note:"Confirmado no Continente Online em 20/09/2026: 1,39 € / 1000 g (8 un)."},
-        {store:"Continente",brand:"Mimosa Natural Super Poupança",price:1.89,pack:8,unit:"un",format:"8 × 120 g",note:"Preço normal observado online em 20/09/2026."},
-        {store:"Continente",brand:"Danone Natural",price:2.09,pack:8,unit:"un",format:"8 un / 960 g",note:"Preço observado online em 20/09/2026; PVPR indicado 2,72 €."},
+        {store:"Continente",brand:"Mimosa Natural Super Poupança",price:1.89,pack:8,unit:"un",format:"8 × 120 g",note:"Confirmado no Continente Online em 20/09/2026: 1,89 € / 960 g (8 un)."},
+        {store:"Continente",brand:"Danone Natural",price:2.09,pack:8,unit:"un",format:"8 un / 960 g",note:"Confirmado no Continente Online em 20/09/2026: 2,09 € / 960 g (8 un), em campanha; PVPR indicado 2,72 €."},
         {store:"Auchan",brand:"Auchan Natural Cremoso",price:1.09,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
       ],
       "Bebida de soja":[
@@ -53,7 +53,7 @@ function defaultPrices(){
       ],
       "Queijo fresco":[
         {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:1,unit:"un",format:"1 un / 80 g",note:"Confirmado no Continente Online em 20/09/2026: 0,59 € / 80 g."},
-        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",note:"Preço observado online."}
+        {store:"Continente",brand:"Matinal",price:2.69,pack:3,unit:"un",format:"3 × 72 g",note:"Confirmado no Continente Online em 20/09/2026: preço normal 2,69 € / 3 × 72 g. Campanhas podem baixar temporariamente o preço."}
       ],
       "Iogurte de soja":[
         {store:"Auchan",brand:"Auchan",price:1.39,pack:4,unit:"un",format:"4 × 100 g",note:"Confirmado no Auchan Online em 20/09/2026: 1,39 € / 4 × 100 g."},
