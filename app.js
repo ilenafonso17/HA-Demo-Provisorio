@@ -247,7 +247,7 @@ function copyFinance(){ navigator.clipboard.writeText($("finSummary").textConten
 
 /* POUPANÇA — TACHINHO */
 function initSavings(){
-  $("p_prod").innerHTML = Object.keys(PRODUCTS).map(p=>`<option>${p}</option>`).join("");
+  $("p_prod").innerHTML = Object.keys(PRODUCTS).sort((a,b)=>a.localeCompare(b,"pt",{sensitivity:"base"})).map(p=>`<option>${p}</option>`).join("");
   loadFormats();
 }
 function loadFormats(){
