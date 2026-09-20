@@ -408,10 +408,10 @@ function renderSavings(){
   const highlights=top.length?"\n\nMaior impacto:\n"+top.map((x,i)=>(i+1)+". "+x.p+" · "+euro(x.monthly)+"/mês").join("\n"):"";
   const extraItems=(db.savings||[]).map(normalizedSaving).filter(x=>(Number(x.extraHomeCost)||0)>0);
   const zeroItems=topSavings().filter(x=>(Number(x.annual)||0)<=0 && !(Number(x.extraHomeCost)>0));
-  const extraItemsNote=extraItems.length?"\n\nFica mais caro feito em casa nesta comparação: "+extraItems.map(x=>x.p).join(", ")+".":"";
-  const noSaving=zeroItems.length?"\n\nSem diferença nesta comparação: "+zeroItems.map(x=>x.p).join(", ")+".":"";
-  const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam mais caros em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"):"";
-  const balanceLines=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica mais caro: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\nNo total: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}\nPor dia e por semana: ${euro(day)}/dia · ${euro(week)}/semana`:`Poupança estimada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nEquivalência: ${euro(day)}/dia · ${euro(week)}/semana`;
+  const extraItemsNote=extraItems.length?"\n\nFazer em casa fica a mais: "+extraItems.map(x=>x.p).join(", ")+".":"";
+  const noSaving=zeroItems.length?"\n\nFica ao mesmo preço: "+zeroItems.map(x=>x.p).join(", ")+".":"";
+  const extra=t.extraAnnual>0?"\nCusto adicional dos produtos que ficam a maiss em casa: "+euro(t.extraMonthly)+"/mês · "+euro(t.extraAnnual)+"/ano\nSaldo líquido da comparação: "+(netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"):"";
+  const balanceLines=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\nNo total: ${netAnnual>0?euro(netMonthly)+"/mês · "+euro(netAnnual)+"/ano de poupança":netAnnual<0?euro(Math.abs(netMonthly))+"/mês · "+euro(Math.abs(netAnnual))+"/ano a mais":"fica igual"}\nPor dia e por semana: ${euro(day)}/dia · ${euro(week)}/semana`:`Poupança estimada: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nEquivalência: ${euro(day)}/dia · ${euro(week)}/semana`;
   $("savTotal").textContent=count?`Resumo · ${count} produto${count===1?"":"s"}\n${balanceLines}${highlights}${extraItemsNote}${noSaving}`:"Ainda não adicionou nenhum produto.";
   const mensalRaw=($("roi_monthly")?.value||"").trim(), monthsRaw=($("roi_months")?.value||"").trim(), totalRaw=($("roi_total")?.value||"").trim();
   const mensal=mensalRaw===""?0:Number(mensalRaw.replace(",", ".")), months=monthsRaw===""?0:Number(monthsRaw.replace(",", ".")), typedTotal=totalRaw===""?0:Number(totalRaw.replace(",", "."));
@@ -428,11 +428,11 @@ function renderSavings(){
 function savingsText(){
   const t=savingsTotals();
   if(!(db.savings||[]).length) return "Tachinho — ainda não existem produtos nesta simulação.";
-  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço indicado":x.priceSource==="referência"?"preço de referência":"preço registado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`feito em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês mais caro`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
+  const lines=db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"preço indicado":x.priceSource==="referência"?"preço de referência":"preço registado";const result=(Number(x.annual)||0)>0?`${euro(x.monthly)}/mês · ${euro(x.annual)}/ano`:Number(x.extraHomeCost)>0?`fazer em casa fica ${euro(Number(x.extraHomeCost)/12)}/mês a mais`:"sem diferença nesta comparação";return `${x.p}: ${result} (${src})`;}).join("\n");
   const who=$("sim_name")?.value.trim();
   const netAnnual=t.annual-(t.extraAnnual||0), netMonthly=t.monthly-(t.extraMonthly||0);
   const netDay=netAnnual/365, netWeek=netAnnual/52;
-  const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica mais caro: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
+  const gross=t.extraAnnual>0?`Poupa: ${euro(t.monthly)}/mês · ${euro(t.annual)}/ano\nFica a mais: ${euro(t.extraMonthly)}/mês · ${euro(t.extraAnnual)}/ano\n`:"";
   const saldoLabel=t.extraAnnual>0?"Saldo líquido":"Poupança estimada";
   const equivalenciaLabel=t.extraAnnual>0?"Equivalência do saldo líquido":"Equivalência da poupança";
   const equivalencia=netAnnual===0?"":`\n${equivalenciaLabel}: ${euro(Math.abs(netDay))}/dia · ${euro(Math.abs(netWeek))}/semana`;
