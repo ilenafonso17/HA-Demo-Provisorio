@@ -306,6 +306,20 @@ function runMathSelfTests(){
   if(!nearlyEqual(mixedTotals.monthly-mixedTotals.extraMonthly,8) || !nearlyEqual(mixedTotals.annual-mixedTotals.extraAnnual,96)) failures.push("total misto poupança + custo extra");
   const mixedImpact=calculatePaymentImpact({netMonthly:mixedTotals.monthly-mixedTotals.extraMonthly,monthlyPayment:20,months:12,total:240});
   if(!nearlyEqual(mixedImpact.percent,40) || !nearlyEqual(mixedImpact.accumulated,96)) failures.push("mensalidade com total misto");
+  const boundaryCases=[
+    ["saldo exatamente zero", [{monthly:10,annual:120},{extraMonthly:10,extraAnnual:120}], 0, 0],
+    ["saldo positivo 1 cêntimo/mês", [{monthly:10.01,annual:120.12},{extraMonthly:10,extraAnnual:120}], 0.01, 0.12],
+    ["saldo negativo 1 cêntimo/mês", [{monthly:10,annual:120},{extraMonthly:10.01,extraAnnual:120.12}], -0.01, -0.12],
+    ["vários produtos com decimais", [{monthly:3.335,annual:40.02},{monthly:2.225,annual:26.70},{extraMonthly:1.11,extraAnnual:13.32}], 4.45, 53.40]
+  ];
+  for(const [name,items,expectedMonth,expectedYear] of boundaryCases){
+    const total=savingsTotals(items);
+    const netMonth=normalizeMoneyZero(total.monthly-total.extraMonthly);
+    const netYear=normalizeMoneyZero(total.annual-total.extraAnnual);
+    if(!nearlyEqual(netMonth,expectedMonth) || !nearlyEqual(netYear,expectedYear)) failures.push(name);
+  }
+  const floatingZero=normalizeMoneyZero(0.1+0.2-0.3);
+  if(floatingZero!==0) failures.push("ruído de ponto flutuante no total");
   const paymentCases=[
     ["mensalidade parcial",{netMonthly:30,monthlyPayment:50,months:12,total:600},{percent:60,missingPerMonth:20,surplusPerMonth:0,accumulated:360,remaining:240,breakEvenMonths:20}],
     ["mensalidade 100%",{netMonthly:50,monthlyPayment:50,months:12,total:600},{percent:100,missingPerMonth:0,surplusPerMonth:0,accumulated:600,remaining:0,breakEvenMonths:12}],
