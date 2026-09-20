@@ -45,14 +45,36 @@ const PRODUCTS = {
   "Pão alentejano": {home:null, yield:null, unit:"g", label:"a validar", status:"a validar", periods:["semana","mês"]}
 };
 
-function defaultPrices(){ return {}; }
+function defaultPrices(){
+  return {
+    updatedAt:"2026-09-20",
+    reviewAfter:"2026-12-20",
+    references:{
+      "Iogurte sólido":[{store:"Auchan",brand:"Auchan Natural",price:1.39,pack:1000,unit:"g",format:"8 × 125 g",note:"Preço observado; campanha/saldo pode variar."}],
+      "Bebida de soja":[
+        {store:"Continente",brand:"Continente",price:0.79,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
+        {store:"Continente",brand:"Continente Bio",price:0.94,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
+        {store:"Continente",brand:"Vive Soy",price:1.69,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
+        {store:"Continente",brand:"Shoyce",price:1.59,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."}
+      ],
+      "Queijo fresco":[
+        {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:80,unit:"g",format:"80 g",note:"Preço observado online."},
+        {store:"Continente",brand:"Matinal",price:2.69,pack:216,unit:"g",format:"3 × 72 g",note:"Preço observado online."}
+      ]
+    }
+  };
+}
 
 let db = loadDB();
 
 function loadDB(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(raw) return JSON.parse(raw);
+    if(raw){
+      const data=JSON.parse(raw);
+      if(!data.prices || !data.prices.references) data.prices=defaultPrices();
+      return data;
+    }
   }catch(e){}
   return {clients:[], savings:[], recruits:[], prices:defaultPrices()};
 }
@@ -189,11 +211,26 @@ function initSavings(){
   loadFormats();
 }
 function loadFormats(){
-  const p = PRODUCTS[$("p_prod").value];
+  const name=$("p_prod").value, p = PRODUCTS[name];
   $("p_period").innerHTML = p.periods.map(x=>`<option value="${x}">${periodLabel(x)}</option>`).join("");
   $("p_unit").value = p.unit;
   $("p_home").value = p.home==null ? "A validar" : euro(p.home)+" / "+p.label;
-  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+". Introduza o preço e o formato que a pessoa compra realmente.";
+  const refs=db.prices?.references?.[name]||[];
+  const review=db.prices?.reviewAfter||"";
+  const stale=review && new Date().toISOString().slice(0,10)>=review;
+  $("p_note").textContent = p.home==null ? "Este custo feito em casa ainda não está validado e não será usado no cálculo." : "Custo feito em casa: "+euro(p.home)+" por "+p.label+" · "+p.status+"."+ (refs.length?" Existem "+refs.length+" preço(s) de referência; última atualização "+(db.prices.updatedAt||"—")+(stale?" · PREÇOS A REVER":"")+".":" Introduza o preço que a pessoa paga.");
+  applyReferencePrice();
+}
+function applyReferencePrice(){
+  const name=$("p_prod").value, refs=db.prices?.references?.[name]||[];
+  if(!refs.length) return;
+  const store=$("p_store").value;
+  const r=refs.find(x=>x.store===store)||refs[0];
+  $("p_store").value=r.store;
+  $("p_brand").value=r.brand||"";
+  $("p_price").value=r.price;
+  $("p_packqty").value=r.pack;
+  $("p_unit").value=r.unit;
 }
 function periodLabel(p){ return p==="dia"?"1 vez por dia":p==="semana"?"1 vez por semana":p==="mês"?"1 vez por mês":p==="2 meses"?"1 vez de 2 em 2 meses":"1 vez de 3 em 3 meses"; }
 function yearlyOccurrences(p){ return p==="dia"?365:p==="semana"?52:p==="mês"?12:p==="2 meses"?6:p==="3 meses"?4:0; }
