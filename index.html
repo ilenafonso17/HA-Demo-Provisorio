@@ -85,7 +85,7 @@
     <div class="card">
       <p class="pill">Compare as formas de aquisição: total financiado primeiro e valor a pronto no fim.</p>
       <div class="grid4" id="finCards"></div>
-      <div class="row"><button onclick="calcFinance()">Atualizar financiamento</button><button class="secondary" onclick="copyFinance()">Copiar resumo</button></div>
+      <div class="row"><button onclick="calcFinance()">Atualizar financiamento</button><button class="secondary" onclick="copyFinance()">Copiar</button></div>
       <div id="finSummary" class="result" style="margin-top:12px"></div>
     </div>
   </div>
@@ -123,12 +123,12 @@
     <div class="card">
       <h3>💳 E na mensalidade?</h3>
       <div class="grid3">
-        <div><label>Mensalidade (€)</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: 39,50" oninput="renderSavings()"></div>
-        <div><label>N.º de meses</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"></div>
-        <div><label>Valor total pago (€)</label><input id="roi_total" inputmode="decimal" placeholder="Opcional" oninput="renderSavings()"></div>
+        <div><label>Mensalidade</label><input id="roi_monthly" inputmode="decimal" placeholder="Ex.: 39,50" oninput="renderSavings()"></div>
+        <div><label>Durante quantos meses?</label><input id="roi_months" inputmode="numeric" placeholder="Ex.: 48" oninput="renderSavings()"></div>
+        <div><label>Valor total (se souber)</label><input id="roi_total" inputmode="decimal" placeholder="Opcional" oninput="renderSavings()"></div>
       </div>
       <div id="roiResult" class="result"></div>
-      <div class="row" style="margin-top:12px"><button onclick="copySavings()">Copiar resumo</button><button onclick="whatsappSavings()">Enviar WhatsApp</button></div>
+      <div class="row" style="margin-top:12px"><button onclick="copySavings()">Copiar</button><button onclick="whatsappSavings()">Enviar no WhatsApp</button></div>
     </div>
   </div>
 
