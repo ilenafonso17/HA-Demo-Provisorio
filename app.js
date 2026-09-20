@@ -50,7 +50,10 @@ function defaultPrices(){
     updatedAt:"2026-09-20",
     reviewAfter:"2026-12-20",
     references:{
-      "Iogurte sólido":[{store:"Auchan",brand:"Auchan Natural",price:1.39,pack:1000,unit:"g",format:"8 × 125 g",note:"Preço observado; campanha/saldo pode variar."}],
+      "Iogurte sólido":[
+        {store:"Continente",brand:"Danone Natural",price:2.09,pack:8,unit:"un",format:"8 un / 960 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Auchan",brand:"Auchan Natural Cremoso",price:1.09,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+      ],
       "Bebida de soja":[
         {store:"Continente",brand:"Continente",price:0.79,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
         {store:"Continente",brand:"Continente Bio",price:0.94,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
@@ -60,6 +63,24 @@ function defaultPrices(){
       "Queijo fresco":[
         {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:80,unit:"g",format:"80 g",note:"Preço observado online."},
         {store:"Continente",brand:"Matinal",price:2.69,pack:216,unit:"g",format:"3 × 72 g",note:"Preço observado online."}
+      ],
+      "Iogurte de soja":[
+        {store:"Auchan",brand:"Auchan",price:1.39,pack:400,unit:"g",format:"4 × 100 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Auchan",brand:"Sojasun",price:2.17,pack:400,unit:"g",format:"400 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Auchan",brand:"Alpro",price:2.49,pack:400,unit:"g",format:"400 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Manteiga de amendoim":[
+        {store:"Continente",brand:"Continente Equilíbrio",price:2.49,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Maionese":[
+        {store:"Continente",brand:"Hellmann's",price:4.84,pack:416,unit:"g",format:"416 g",note:"Preço normal observado online em 20/09/2026; referência promocional não usada."}
+      ],
+      "Massa folhada":[
+        {store:"Auchan",brand:"Auchan",price:1.20,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."},
+        {store:"Auchan",brand:"Polegar",price:0.95,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
+      ],
+      "Massa quebrada":[
+        {store:"Auchan",brand:"Auchan",price:1.19,pack:230,unit:"g",format:"230 g",note:"Preço observado online em 20/09/2026."}
       ]
     }
   };
