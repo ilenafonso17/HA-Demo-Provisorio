@@ -47,9 +47,9 @@ function defaultPrices(){
       ],
       "Bebida de soja":[
         {store:"Continente",brand:"Continente",price:0.79,pack:1000,unit:"ml",format:"1 L",note:"Confirmado no Continente Online em 20/09/2026: 0,79 € / 1 L.",validation:"confirmada"},
-        {store:"Continente",brand:"Continente Bio",price:0.94,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
-        {store:"Continente",brand:"Vive Soy",price:1.69,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."},
-        {store:"Continente",brand:"Shoyce",price:1.59,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online."}
+        {store:"Continente",brand:"Continente Bio",price:0.94,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online.",validation:"confirmada"},
+        {store:"Continente",brand:"Vive Soy",price:1.69,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online.",validation:"confirmada"},
+        {store:"Continente",brand:"Shoyce",price:1.59,pack:1000,unit:"ml",format:"1 L",note:"Preço observado online.",validation:"confirmada"}
       ],
       "Queijo fresco":[
         {store:"Continente",brand:"Continente Equilíbrio",price:0.59,pack:1,unit:"un",format:"1 un / 80 g",note:"Confirmado no Continente Online em 20/09/2026: 0,59 € / 80 g.",validation:"confirmada"},
@@ -81,7 +81,7 @@ function defaultPrices(){
       ],
       "Farinha de arroz":[
         {store:"Continente",brand:"Espiga",price:1.32,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"},
-        {store:"Continente",brand:"Continente Bio Integral",price:2.29,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026."}
+        {store:"Continente",brand:"Continente Bio Integral",price:2.29,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
       ],
       "Granola":[
         {store:"Continente",brand:"Continente Triplo Chocolate",price:2.99,pack:500,unit:"g",format:"500 g",note:"Preço observado online em 20/09/2026.",validation:"confirmada"}
