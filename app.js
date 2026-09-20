@@ -392,7 +392,14 @@ function topSavings(){ return (db.savings||[]).map(normalizedSaving).sort((a,b)=
 function renderSavings(){
   if(!$("savList")) return;
   db.savings=db.savings||[];
-  $("savList").innerHTML = `<table><tr><th>Produto</th><th>Compra</th><th>Hábito</th><th>Este valor está</th><th>Poupa por mês</th><th>Poupa por ano</th><th></th></tr>${db.savings.map(raw=>{const x=normalizedSaving(raw);const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";return `<tr><td><b>${escapeHTML(x.p||"")}</b><br><span class="small">${escapeHTML(x.brand||"")}</span></td><td>${escapeHTML(x.store||"")} · ${euro(x.price)}<br><span class="small">${escapeHTML(src)}${x.referenceUpdatedAt?" · "+escapeHTML(x.referenceUpdatedAt):""}</span></td><td>${escapeHTML(periodLabel(x.period||"semana"))}<br><span class="small">Usa ${escapeHTML(String(x.qty||1))} embalagem(ns)${Number(x.consumedEach||x.pack)!==Number(x.pack)?" · "+escapeHTML(String(x.consumedEach||""))+" "+escapeHTML(x.unit||"")+" de cada":""}</span></td><td><span class="small">${escapeHTML(simpleConfidenceLabel(x))}</span></td><td><b>${Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost)/12)+" mais":"Sem diferença"}</b></td><td><b>${Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?"+"+euro(Number(x.extraHomeCost))+" mais":"Sem diferença"}</b></td><td><button class="danger" onclick="removeSaving('${x.id}')">Retirar</button></td></tr>`}).join("")}</table>`;
+  $("savList").innerHTML = '<div class="savings-cards">'+db.savings.map(raw=>{
+    const x=normalizedSaving(raw);
+    const src=x.priceSource==="cliente/manual"?"Preço que paga":x.priceSource==="referência"?"Preço encontrado":"Preço que paga";
+    const month=Number(x.annual)>0?euro(x.monthly):Number(x.extraHomeCost)>0?euro(Number(x.extraHomeCost)/12)+" a mais":"Sem diferença";
+    const year=Number(x.annual)>0?euro(x.annual):Number(x.extraHomeCost)>0?euro(Number(x.extraHomeCost))+" a mais":"Sem diferença";
+    const habit=periodLabel(x.period||"semana")+(Number(x.consumedEach||x.pack)!==Number(x.pack)?" · usa "+String(x.consumedEach||"")+" "+String(x.unit||"")+" de cada embalagem":"");
+    return `<article class="saving-card"><div class="saving-card-head"><div><b>${escapeHTML(x.p||"")}</b>${x.brand?'<div class="small">'+escapeHTML(x.brand)+'</div>':""}</div><button class="danger compact" onclick="removeSaving('${x.id}')">Retirar</button></div><div class="saving-main"><span><small>Por mês</small><strong>${month}</strong></span><span><small>Por ano</small><strong>${year}</strong></span></div><div class="small">${escapeHTML(x.store||"")}${x.store?" · ":""}${euro(x.price)} · ${escapeHTML(src)}</div><div class="small">${escapeHTML(habit)} · ${escapeHTML(simpleConfidenceLabel(x))}</div></article>`;
+  }).join("")+'</div>';
   const t=savingsTotals();
   const netAnnual=normalizeMoneyZero(t.annual-t.extraAnnual), netMonthly=normalizeMoneyZero(t.monthly-t.extraMonthly);
   const day=Math.abs(netAnnual/365), week=Math.abs(netAnnual/52);\n  const headline=$("savHeadline");
